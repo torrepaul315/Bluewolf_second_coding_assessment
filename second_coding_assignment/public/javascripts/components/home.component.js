@@ -9,25 +9,26 @@
     controller.$inject = ['$http']
     function controller($http) {
          console.log('something! ')
-// keep your variables up here!
+
+
       const vm = this;
-      // console.log('sanity check');
-      vm.newPostVis = false;
-      vm.commentsVis =false;
-      vm.orderByVal = '-vote_count';
-      vm.counter=0;
-      // vm.fields = ['votes', 'date', 'title'];
+      var geocoder
+      var map
+      let latitude
+      let longitude
+
 
       vm.posts = [];
       console.log(vm.posts);
 // working on getting a map up on page load!
-      vm.$onInit = function () {
+    vm.$onInit = function () {
         console.log("doing something!");
     //    initMap(){
     let pos
     var infoWindow
+    geocoder = new google.maps.Geocoder();
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
       zoom: 11,
     //  center: uluru
     });
@@ -46,7 +47,7 @@
           };
           console.log(pos);
           infoWindow.setPosition(pos);
-          infoWindow.setContent('You are here...or very very close by!');
+          infoWindow.setContent('Get Weather for your current location');
           infoWindow.open(map);
           map.setCenter(pos);
         //  callToApi(pos)
@@ -57,13 +58,71 @@
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
       };
+    }
 
-
-
-
-
-
+        // vm.getLatLong = function(locationString)
+    vm.getLatLong = function() {
+      console.log('hooked up!',
+      vm.locationString);
+      var geoCode = {
+        address: vm.locationString
       }
+      console.log(geoCode);
+      //google.maps.Geocoder.geocode(GeocoderRequest);
+      codeAddress(geoCode);
+    }
+
+    function codeAddress(GeocoderRequest) {
+    console.log('inside code address!',GeocoderRequest);
+    geocoder.geocode( GeocoderRequest, function(results, status) {
+      if (status == 'OK') {
+        console.log(
+        'latitude',
+          results[0].geometry.viewport.f.b,
+        'longitude',
+        results[0].geometry.viewport.b.b,
+
+      );
+      latitude = results[0].geometry.viewport.f.b;
+      longitude = results[0].geometry.viewport.b.b;
+
+        findWeather(latitude, longitude);
+        map.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+        });
+
+
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+//hmm- key is in the file, but isn't this something, along with the gmail key, something that should be in the .dotenv? hmm!
+  function findWeather(lat, long) {
+    console.log('time to actually hit the api!');
+//https://api.darksky.net/forecast/[key]/[latitude],[longitude],[time]
+    $http.get(`/weatherInfo`).then((response) => {
+          console.log(response);
+          //postObj.comments.push(cObj);
+          // $http.get(`/api/posts/${postObj.id}`)
+          // .then((post)=>{
+          //   console.log(post.data)
+          //   $http.get(`/api/comments/${postObj.id}/comments`)
+          //   .then((postComments) => {
+          //   console.log(postComments.data)
+          //
+          //delete vm.newComment;
+          //   })
+          // })
+        })
+        .catch((err) => {
+         console.log(err);
+        });
+
+
+  }
 
 
 
@@ -78,7 +137,7 @@
         //  $scope.newPostVis ? true : false;
       }
       vm.toggleComments = function(post){
-        // console.log("linked!");
+        console.log("linked!");
         post.commentsVis = !post.commentsVis;
       }
 
@@ -113,119 +172,9 @@
       }
 
 
-      vm.createNewComment= function(postObj){
-
-        console.log(1,postObj.id,         2,postObj,
-        3,postObj.comments,
-        4, vm.newComment,
-        6, postObj.commentsVis
-        )
-
-        var cObj = {
-          content: vm.newComment,
-          post_id: postObj.id
-        };
-        console.log(cObj);
-
-
-
-        //had a struggle point here- can add comment to db, but then I also need to update the comments list! was trying to update to the array of the posts object by pushing the comment , but the more I thought about it and looked at the content of the comments array, it seemed to make more sense to try a get request for the blogpost comments by id, then look to tap into that ng-repeat or that specific post!
-        $http.post(`/api/comments/${postObj.id}/comments`, cObj)
-        .then((data) => {
-          console.log(data);
-          postObj.comments.push(cObj);
-          // $http.get(`/api/posts/${postObj.id}`)
-          // .then((post)=>{
-          //   console.log(post.data)
-          //   $http.get(`/api/comments/${postObj.id}/comments`)
-          //   .then((postComments) => {
-          //   console.log(postComments.data)
-          //
-          delete vm.newComment;
-          //   })
-          // })
-        })
-        .catch((err) => {
-         console.log(err);
-        });
-      }
-      // I am altering the contents of the posts object in the line below...(or so I think! shouldn't that change trigger the generated ng-repreat?)
-      // vm.posts[`${post-1}`].comments.push(vm.newComment);
-      // console.log(vm.posts[`${postId}`].comments);
-      //come back to tweak!
-      // $http.get(`/api/comments/${postObj.id}/comments`)
-      // //
-      // .then((data) =>{
-      // // console.log(data.data);
-      // vm.posts[postId].comments = data.data;
-      // console.log(vm.posts[postId].comments);
-
-
-
-
-//getting closer here! but page gets a lil cray once you start clicking...might need to try to use the response and/or just get that particular post to update tally? can get them all back but that seems a tad excessive!
-
-//tweaked how the upvote works that said....might/might not solve yo issue of the tally seeming kind of nuts!
-
-      vm.increment = function(post) {
-        console.log(post.id);
-        $http.post(`/api/posts/${post.id}/votes`)
-        .then((resp)=> {
-           console.log(resp);
-           //may need to switch back to the get all posts route!
-           $http.get('/api/posts/' + post.id)
-           .then((postsInDb) => {
-             console.log(postsInDb.data);
-             post.vote_count = postsInDb.data.vote_count;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        })
-      }
-
-      vm.decrement = function(post) {
-        console.log(1,post, 2,post.vote_count);
-        if (post.vote_count <= 0 ){
-          alert("sorry- vote numbers cant go negative because we're positive :-)");
-          }
-        else {
-          $http.delete(`/api/posts/${post.id}/votes`)
-          .then((resp)=> {
-             console.log(resp);
-             $http.get('/api/posts')
-             .then((postsInDb) => {
-               console.log(postsInDb.data);
-               vm.posts = postsInDb.data;
-
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-
-          })
-        }
-      }
-
-      vm.deletePost = function(id) {
-        console.log("id is", id);
-
-        $http.delete('api/posts/'+ id)
-        .then((data) => {
-          console.log(data);
-          $http.get('/api/posts')
-          .then((postsInDb) => {
-            console.log(postsInDb.data);
-            vm.posts = postsInDb.data;
-          })
-        })
-        .catch((err) => {
-         console.log(err);
-        });
-
-      }
 
     }
+
 
 
 }());
