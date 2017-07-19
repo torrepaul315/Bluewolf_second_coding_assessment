@@ -18,15 +18,52 @@
       vm.counter=0;
       // vm.fields = ['votes', 'date', 'title'];
 
-      // vm.posts = [];
-      // console.log(vm.posts);
-      // vm.$onInit = function () {
-      //   $http.get('/api/posts')
-      //   .then( function (postsInDb) {
-      //     vm.posts = postsInDb.data;
-      //      console.log(vm.posts,vm.posts[0].comments, vm.posts[0].comments[1].content);
-      //   })
-      // }
+      vm.posts = [];
+      console.log(vm.posts);
+// working on getting a map up on page load!
+      vm.$onInit = function () {
+        console.log("doing something!");
+    //    initMap(){
+    let pos
+    var infoWindow
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 11,
+    //  center: uluru
+    });
+    // var marker = new google.maps.Marker({
+    //   position: uluru,
+    //   map: map
+    // });
+    infoWindow = new google.maps.InfoWindow;
+
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          console.log(pos);
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('You are here...or very very close by!');
+          infoWindow.open(map);
+          map.setCenter(pos);
+        //  callToApi(pos)
+        }, function() {
+          handleLocationError(true, infoWindow, map.getCenter());
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+      };
+
+
+
+
+
+
+      }
 
 
 

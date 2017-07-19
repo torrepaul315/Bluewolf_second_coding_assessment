@@ -1,40 +1,53 @@
 <!-- Navbar! -->
 
-<h1>wahhhhhhhh!</h1>
+
 <nav class="navbar navbar-default">
-<div class="container">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand">Front Range Trail Board</a>
-    <ul class="nav navbar-nav">
-      <li>
-        <a ng-click="$ctrl.toggleNewPost()">
-          <span class="glyphicon glyphicon-plus"> New Post</a>
-      </li>
-      <li class="navbar-form">
-        <div class="form-inline">
-          <input type="text" placeholder="search" class="form-control" ng-model="search.title">
-        </div>
-      </li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>Sort by {{ view.currentSort }}</span> <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a ng-click="$ctrl.orderByVal='-vote_count'">Votes</a></li>
-          <li><a ng-click="$ctrl.orderByVal='title'">Title</a></li>
-          <li><a ng-click="$ctrl.orderByVal='-created_at'">Date</a></li>
-        </ul>
-      </li>
-    </ul>
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">Front Range Trail Board</a>
+      <ul class="nav navbar-nav">
+        <li>
+          <a ng-click="$ctrl.toggleNewPost()">
+            <span class="glyphicon glyphicon-plus"> New Post</a>
+        </li>
+        <li class="navbar-form">
+          <div class="form-inline">
+            <input type="text" placeholder="search" class="form-control" ng-model="search.title">
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>Sort by {{ view.currentSort }}</span> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ng-click="$ctrl.orderByVal='-vote_count'">Votes</a></li>
+            <li><a ng-click="$ctrl.orderByVal='title'">Title</a></li>
+            <li><a ng-click="$ctrl.orderByVal='-created_at'">Date</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+<!-- <li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li> -->
   </div>
-<li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li>
+</nav>
+
+<div id="gmaps" class="container-fluid">
 
 
-<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+
+
+ <div  id="map"></div>
+
+
+</div>
+
+<!-- <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
   </div>
 </div>
 </nav>
@@ -108,7 +121,7 @@
         Create Post
       </button>
     </div>
-  </form>
+  </form> -->
 
   <div class="row" ng-repeat="postObj in $ctrl.posts | filter:search:strict | orderBy: $ctrl.orderByVal">
 

@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.navbar-default {
+  background-color:rgb(6,53,77);
+
+
+  
+   /*#06354d#035darkslategrayhsl(200,85,16)rgb(6,53,77)*/
+}
