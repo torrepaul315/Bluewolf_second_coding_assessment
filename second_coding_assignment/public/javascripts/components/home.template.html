@@ -1,0 +1,202 @@
+<!-- Navbar! -->
+
+<h1>wahhhhhhhh!</h1>
+<nav class="navbar navbar-default">
+<div class="container">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand">Front Range Trail Board</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a ng-click="$ctrl.toggleNewPost()">
+          <span class="glyphicon glyphicon-plus"> New Post</a>
+      </li>
+      <li class="navbar-form">
+        <div class="form-inline">
+          <input type="text" placeholder="search" class="form-control" ng-model="search.title">
+        </div>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>Sort by {{ view.currentSort }}</span> <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a ng-click="$ctrl.orderByVal='-vote_count'">Votes</a></li>
+          <li><a ng-click="$ctrl.orderByVal='title'">Title</a></li>
+          <li><a ng-click="$ctrl.orderByVal='-created_at'">Date</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+<li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li>
+
+
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+  </div>
+</div>
+</nav>
+<div class="container">
+
+  <form name="$ctrl.newPostForm" novalidate ng-submit="$ctrl.createNewPost()" ng-show="$ctrl.newPostVis">
+    <div class='form-group'
+    ng-class="{
+      'has-error': $ctrl.newPostForm.title.$invalid,
+      'has-success': $ctrl.newPostForm.title.$valid
+      }">
+      <label for="title">Title</label>
+      <input
+      id="title"
+      class="form-control"
+      name="title"
+      ng-model="$ctrl.newPost.title"
+      required minlength="5"
+      type="text">
+      <span ng-show="newPostForm.title.$error.minlength">Username needs to be at least 5 characters</span>
+    </div>
+    <div class="form-group"
+    ng-class="{
+    'has-error': $ctrl.newPostForm.body.$invalid,
+    'has-success': $ctrl.newPostForm.body.$valid
+    }">
+      <label for="body">Body</label>
+      <textarea
+      id="body"
+      ng-model="$ctrl.newPost.body"
+      name="body"
+      class="form-control"
+      required minlength="20"
+      type="text"
+      ></textarea>
+      <span ng-show="newPostForm.body.$error.minlength">body needs to be at least one full sentence in length</span>
+    </div>
+    <div class="form-group"
+    ng-class="{
+    'has-error': $ctrl.newPostForm.author.$invalid,
+    'has-success': $ctrl.newPostForm.author.$valid
+    }">
+      <label for="author">Author</label>
+      <input
+      id="author"
+      ng-model="$ctrl.newPost.author"
+      name="author"
+      class="form-control"
+      required minlength="5"
+      type="text">
+      <span ng-show="newPostForm.author.$error.minlength">Please add Author name</span>
+    </div>
+    <div class="form-group" accesskey=""ng-class="{
+    'has-error': $ctrl.newPostForm.image.$invalid,
+    'has-success': $ctrl.newPostForm.image.$valid
+    }">
+      <label for="image-url">Image URL</label>
+      <input
+      id="image"
+      ng-model="$ctrl.newPost.image_url"
+      name="image_url"
+      class="form-control"
+      required minlength="10"
+      >
+      <span ng-show="newPostForm.image.$error.minlength">please add a valid image URL</span>
+    </div>
+    <div class="form-group">
+      <button
+      type="submit"
+      class="btn btn-primary" ng-disabled="$ctrl.newPostForm.$invalid">
+        Create Post
+      </button>
+    </div>
+  </form>
+
+  <div class="row" ng-repeat="postObj in $ctrl.posts | filter:search:strict | orderBy: $ctrl.orderByVal">
+
+     <post data="postObj"></post>
+   <div class="col-md-12">
+    <div class="well">
+      <div class="row">
+      <div class="col-md-2 col-sm-2 col-xs-2">
+        <img ng-src="{{postObj.image_url}}">
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            {{postObj.title}}
+            |
+            <a><i class="glyphicon glyphicon-arrow-up"
+            ng-click="$ctrl.increment(postObj)"
+              ></i></a>
+            <a><i class="glyphicon glyphicon-arrow-down"
+            ng-click="$ctrl.decrement(postObj)"
+              ></i></a>
+            {{postObj.vote_count}}
+            <a ui-sref='edit({id: postObj.id})'>
+              <button
+              ng-model="postObj"
+              type="edit post"
+              class="btn btn-primary btn-sm"
+              >
+              Edit Post
+              </button>
+              </a>
+              <button
+              ng-click="$ctrl.deletePost(postObj.id)"
+              ng-model="postObj"
+              type="delete post"
+              class="btn btn-warning btn-sm"
+              >
+              Del Post
+              </button>
+
+          </h4>
+          <div class="text-right">
+            {{postObj.author}}
+          </div>
+          <p>
+            {{postObj.body}}
+          </p>
+          <div>
+            Posted On: {{postObj.created_at | date:'medium'}}
+            |
+            <a ng-click="$ctrl.toggleComments(postObj)">
+            <i class="glyphicon  glyphicon-comment"></i>
+            <ng-pluralize count="postObj.comments.length"
+            when="{'0': 'be the first person to comment!',
+            '1': '1 comment',
+            'other': '{} comments'}">
+            </ng-pluralize>
+            </a>
+          </div>
+
+          <div class="row"
+          ng-show="postObj.commentsVis"
+          ng-submit="$ctrl.createNewComment(postObj)"
+          >
+            <div class="col-md-8">
+              <hr>
+            <div ng-repeat="indivComments in postObj.comments">
+
+              <p>
+                {{indivComments.content}}
+              </p>
+            </div>
+              <form class="form-inline">
+                <div class="form-group">
+                  <input
+                  id="newComment"
+                  ng-model="$ctrl.newComment"
+                  name="newComment"
+                  class="form-control">
+                </div>
+                <div class="form-group">
+                  <input type="submit" class="btn btn-primary">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
