@@ -7,8 +7,24 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var http = require('http');
 
 var app = express();
+
+var Chart = require('chart.js');
+
+//attempt to add in proxy Server
+var httpProxy = require('http-proxy');
+var apiProxy = httpProxy.createProxyServer();
+var serverOne = 'http://localhost:3001';
+
+app.all("/app1/*", function(req, res) {
+    console.log('redirecting to Server1');
+    apiProxy.web(req, res, {target: serverOne});
+});
+//done with proxy server seciton
+
+
 
 // ...prolly get rid of these?
 //app.set('views', path.join(__dirname, 'views'));
@@ -21,9 +37,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/../', 'node_modules')))
+//need to come back to this! may need to npm install more shite!
+// require('dotenv').config()
+//app.engine('.html', require('ejs').renderFile);
 
-app.use('/weatherInfo', require('./routes/index'));
+
+app.use('/weatherInfo', index);
 app.use('/users', users);
+
+
+// app.use('*', function(req, res, next) {
+//   res.sendFile('index.html', {root: path.join(__dirname, 'public')})
+// })
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -32,15 +59,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
 module.exports = app;

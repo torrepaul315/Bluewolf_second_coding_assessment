@@ -68,6 +68,9 @@
         address: vm.locationString
       }
       console.log(geoCode);
+      vm.posts.push(geoCode);
+      console.log(vm.posts);
+      console.log("local array", vm.posts);
       //google.maps.Geocoder.geocode(GeocoderRequest);
       codeAddress(geoCode);
     }
@@ -85,8 +88,9 @@
       );
       latitude = results[0].geometry.viewport.f.b;
       longitude = results[0].geometry.viewport.b.b;
-
-        findWeather(latitude, longitude);
+      var latlong = latitude+','+longitude;
+      console.log('combo!',latlong);
+        findWeather(latlong);
         map.setCenter(results[0].geometry.location);
         var marker = new google.maps.Marker({
             map: map,
@@ -100,10 +104,10 @@
     });
   }
 //hmm- key is in the file, but isn't this something, along with the gmail key, something that should be in the .dotenv? hmm!
-  function findWeather(lat, long) {
+  function findWeather(latlong) {
     console.log('time to actually hit the api!');
-//https://api.darksky.net/forecast/[key]/[latitude],[longitude],[time]
-    $http.get(`/weatherInfo`).then((response) => {
+
+    $http.get('/weatherInfo/'+ latlong).then((response) => {
           console.log(response);
           //postObj.comments.push(cObj);
           // $http.get(`/api/posts/${postObj.id}`)
@@ -123,7 +127,45 @@
 
 
   }
-
+// where I start my chart.js adventure!
+        // var ctx = document.getElementById("myChart");
+        // console.log(ctx);
+        // var myChart = new Chart(ctx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        //         datasets: [{
+        //             label: '# of Votes',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             backgroundColor: [
+        //                 'rgba(255, 99, 132, 0.2)',
+        //                 'rgba(54, 162, 235, 0.2)',
+        //                 'rgba(255, 206, 86, 0.2)',
+        //                 'rgba(75, 192, 192, 0.2)',
+        //                 'rgba(153, 102, 255, 0.2)',
+        //                 'rgba(255, 159, 64, 0.2)'
+        //             ],
+        //             borderColor: [
+        //                 'rgba(255,99,132,1)',
+        //                 'rgba(54, 162, 235, 1)',
+        //                 'rgba(255, 206, 86, 1)',
+        //                 'rgba(75, 192, 192, 1)',
+        //                 'rgba(153, 102, 255, 1)',
+        //                 'rgba(255, 159, 64, 1)'
+        //             ],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             yAxes: [{
+        //                 ticks: {
+        //                     beginAtZero:true
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // });
 
 
 
@@ -131,15 +173,6 @@
 
 
 // mah functions!
-      vm.toggleNewPost = function(){
-        // console.log("linked!");
-        vm.newPostVis = !vm.newPostVis;
-        //  $scope.newPostVis ? true : false;
-      }
-      vm.toggleComments = function(post){
-        console.log("linked!");
-        post.commentsVis = !post.commentsVis;
-      }
 
 
       vm.createNewPost = function(){
