@@ -63,8 +63,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 
     <!-- trying to bring in moment via node mod! -->
-    <script src="components/moment/moment.js"></script>
-    <script src="components/angular-moment/angular-moment.js"></script>
+    <script src="node_modules/moment/moment.js"></script>
+    <script src="node_modules/angular-moment/angular-moment.js"></script>
 
     <script src="/javascripts/modules/app.module.js"></script>
 
@@ -73,11 +73,21 @@
     <script src="/javascripts/components/home.component.js"></script>
 
 
-
+    <!-- my google script! -->
     <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmqAka_1GCgeLv70df2I7nInVAps7zRdc">
     </script>
 
-    <!-- <script src="/js/posts/post-list.component.js"></script> -->
+    <!-- now trying my chart.js stuff! -->
+
+    <!-- these weren't working so well -->
+    <!-- <script src="../node_modules/chart.js/Chart.min.js"></script>
+    <script src="../node_modules/angular-chart.js/dist/angular-chart.min.js"></script> -->
+    <!-- take two! via cdns-->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.js"></script>
+   <script src="//cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+
+
+
   </body>
 </html>
