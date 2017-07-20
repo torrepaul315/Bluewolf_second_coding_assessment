@@ -59,8 +59,81 @@
   </div>
 </div>
 <div class="container-fluid">
+  <div class="row" ng-repeat="data in $ctrl.weatherInfoCurrent">
+    <post data="data"></post>
+   <div class="col-md-12">
+    <div class="well">
+      <div class="row">
+        <div class="media-body">
+          <h4 class="media-heading">
+            {{data. summary}}
+
+
+            {{data.icon}}
+            <a ui-sref='edit({id: postObj.id})'>
+              <button
+              ng-model="postObj"
+              type="edit post"
+              class="btn btn-primary btn-sm"
+              >
+              Edit Post
+              </button>
+              </a>
+              <button
+              ng-click="$ctrl.deletePost(postObj.id)"
+              ng-model="postObj"
+              type="delete post"
+              class="btn btn-warning btn-sm"
+              >
+              Del Post
+              </button>
+
+          </h4>
+          <div class="text-right">
+            {{postObj.author}}
+          </div>
+          <p>
+            {{postObj.body}}
+          </p>
+          <div>
+            Posted On: {{postObj.created_at | date:'medium'}}
+            |
+            <a ng-click="$ctrl.toggleComments(postObj)">
+            <i class="glyphicon  glyphicon-comment"></i>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  </div>
+<!-- this will take a lot of editing!  -->
+
+
+
   <div class="row">
     <div class="col-lg-7 col-md-5 col-sm-12 tex-center">
+
+
+
+
+
+
+
+
+
+
       <canvas id="myChart" width="400" height="400"></canvas>
 
     </div>

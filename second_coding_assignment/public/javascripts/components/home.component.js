@@ -16,6 +16,8 @@
       var map
       let latitude
       let longitude
+      var latlong
+      var pastWkLoHiTemp = []
 
 
       vm.posts = [];
@@ -88,9 +90,9 @@
       );
       latitude = results[0].geometry.viewport.f.b;
       longitude = results[0].geometry.viewport.b.b;
-      var latlong = latitude+','+longitude;
+      latlong = latitude.toPrecision(8)+','+longitude.toPrecision(8);
       console.log('combo!',latlong);
-        findWeather(latlong);
+        findCurrentWeather(latlong);
         map.setCenter(results[0].geometry.location);
         var marker = new google.maps.Marker({
             map: map,
@@ -104,29 +106,59 @@
     });
   }
 //hmm- key is in the file, but isn't this something, along with the gmail key, something that should be in the .dotenv? hmm!
-  function findWeather(latlong) {
+  function findCurrentWeather(latlong) {
     console.log('time to actually hit the api!');
 
     $http.get('/weatherInfo/'+ latlong).then((response) => {
-          console.log(response);
-          //postObj.comments.push(cObj);
-          // $http.get(`/api/posts/${postObj.id}`)
-          // .then((post)=>{
-          //   console.log(post.data)
-          //   $http.get(`/api/comments/${postObj.id}/comments`)
-          //   .then((postComments) => {
-          //   console.log(postComments.data)
-          //
-          //delete vm.newComment;
-          //   })
-          // })
+          var currentTimeInUnix = response.data.currently.time
+          console.log('curentTimeInUnix', currentTimeInUnix
+          );
+          // var unixMinusAday = currentTimeInUnix - 86400;
+          // var unixMinusaMonth = currentTimeInUnix - 2851200;
+          // var timeScrub =  moment.unix(currentTimeInUnix);
+          // var dayback = moment.unix(unixMinusAday);
+          // var monthBack = moment.unix(unixMinusaMonth);
+
+          getPastWeekWeather(currentTimeInUnix);
+        //  vm.weatherInfoCurrent = response;
         })
         .catch((err) => {
          console.log(err);
         });
-
-
   }
+
+  function getPastWeekWeather(UnixStartPoint) {
+     for (var x = 0; x < 7; x++) {
+       UnixStartPoint -= 86400;
+       var dsHistWeather = latlong + ','+ UnixStartPoint
+       //console.log(latlong,UnixStartPoint);
+       $http.get('/weatherInfo/'+ dsHistWeather).then((response) => {
+             var dailyMax = response.data.daily.data[0].temperatureMax;
+
+            var dailyMin = response.data.daily.data[0].temperatureMin;
+            //  console.log('dailyMax', dailyMax,
+            //  'dailyMin', dailyMin    )
+            //  latlong
+             var dailyLoHi = {};
+             dailyLoHi.min = dailyMin;
+             dailyLoHi.max = dailyMax;
+             //console.log(dailyLoHi);
+             pastWkLoHiTemp.push(dailyLoHi)
+
+
+           //  vm.weatherInfoCurrent = response;
+           })
+           .catch((err) => {
+            console.log(err);
+           });
+
+
+
+     }
+     pastWkLoHiTemp.reverse()
+     console.log(pastWkLoHiTemp);
+  }
+
 // where I start my chart.js adventure!
         // var ctx = document.getElementById("myChart");
         // console.log(ctx);
