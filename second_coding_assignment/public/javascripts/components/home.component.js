@@ -22,7 +22,7 @@
       var haveHistData = false;
       console.log( example);
 
-      vm.posts = [];
+    //  vm.currentWeather = [];
       console.log(vm.posts);
 // working on getting a map up on page load!
     vm.$onInit = function () {
@@ -112,16 +112,17 @@
     console.log('time to actually hit the api!');
 
    $http.get('/weatherInfo/'+ latlong).then((response) => {
-          var currentTimeInUnix = response.data.currently.time
-          console.log('curentTimeInUnix', currentTimeInUnix
-          );
-
-           var timeScrub =  moment.unix(currentTimeInUnix);
+     console.log(response);
+          // var currentTimeInUnix = response.data.currently.time
+          // console.log('curentTimeInUnix', currentTimeInUnix
+          // );
+          //
+          //  var timeScrub =  moment.unix(currentTimeInUnix);
 
         //  vm.posts = [exampObj];
-          showCurrentWeather(response,timeScrub);
+          showCurrentWeather(response);
 //!!!!!turned this off while rendering current weather stuff!
-        getPastWeekWeather(currentTimeInUnix);
+      //  getPastWeekWeather(currentTimeInUnix);
         //  vm.weatherInfoCurrent = response;
         })
         .catch((err) => {
@@ -139,18 +140,19 @@
       3- prolly connected to 2, a quick description!
 
   */
-  function showCurrentWeather(currentWeather, timePrep) {
-     var weatherForecast = {};
-     weatherForecast.currentTemp = currentWeather.data.currently.apparentTemperature;
-     weatherForecast.currWIcon = currentWeather.data.currently.icon;
-     weatherForecast.currWSummary = currentWeather.data.currently.summary;
-     weatherForecast.currTime = timePrep;
-    //  var day = moment().format(timePrep);
-     console.log(timePrep, weatherForecast);
+  function showCurrentWeather(currentWeather) {
+  //hmm- now that i am doing data manipulation, this function is largely unnecessary!
+    //  var weatherForecast = {};
+    //  weatherForecast.currentTemp = currentWeather.data.currently.apparentTemperature;
+    //  weatherForecast.currWIcon = currentWeather.data.currently.icon;
+    //  weatherForecast.currWSummary = currentWeather.data.currently.summary;
+    //  weatherForecast.currTime = timePrep;
+    // //  var day = moment().format(timePrep);
+    //  console.log(timePrep, weatherForecast);
 
 
 
-     vm.currentWeather = [weatherForecast];
+    vm.currentWeather = [currentWeather.data];
 
 
 
@@ -159,38 +161,70 @@
 
 
   function getPastWeekWeather(UnixStartPoint) {
-     for (var x = 0; x < 7; x++) {
-       UnixStartPoint -= 86400;
-       var dsHistWeather = latlong + ','+ UnixStartPoint
-       //console.log(latlong,UnixStartPoint);
-       $http.get('/weatherInfo/hist/'+ dsHistWeather).then((response) => {
-             var dailyMax = response.data.daily.data[0].temperatureMax;
+    console.log('hist weather fired');
+    UnixStartPoint -= 86400;
+    var dsHistWeather = latlong + ','+ UnixStartPoint
 
-            var dailyMin = response.data.daily.data[0].temperatureMin;
+    $http.get('/weatherInfo/hist/'+ dsHistWeather).then((response) => {
+          var dailyMax = response.data.daily.data[0].temperatureMax;
+          var dailyMin = response.data.daily.data[0].temperatureMin;
+         //might not need an object of high/low temps, but perhaps with a line graph!
+         //  var dailyLoHi = {};
+         //  dailyLoHi.min = dailyMin;
+         //  dailyLoHi.max = dailyMax;
+         //
 
-            //might not need an object of high/low temps, but perhaps with a line graph!
-            //  var dailyLoHi = {};
-            //  dailyLoHi.min = dailyMin;
-            //  dailyLoHi.max = dailyMax;
-            //
-
-            //set up an array to render!
-              pastWkLoHiTemp.push(dailyMax);
-              console.log(pastWkLoHiTemp);
-           //  vm.weatherInfoCurrent = response;
-         })
-           .catch((err) => {
-            console.log(err);
-           });
-     }
-     //as per the console logs, this appeared to fire the function PRIOR to the for loop clompleting for whatever reason!
-     pastWkLoHiTemp.reverse()
-     console.log(pastWkLoHiTemp.length, typeof pastWkLoHiTemp, x);
-     buildNewChart(pastWkLoHiTemp);
-
+         //set up an array to render!
+           pastWkLoHiTemp.push(dailyMax);
+           console.log(pastWkLoHiTemp);
+           buildNewChart(pastWkLoHiTemp);
+        //  vm.weatherInfoCurrent = response;
+      })
+        .catch((err) => {
+         console.log(err);
+        });
   }
 
-// where I start my chart.js adventure!
+
+
+
+
+
+
+
+  //
+  //    for (var x = 0; x < 7; x++) {
+  //      UnixStartPoint -= 86400;
+  //      var dsHistWeather = latlong + ','+ UnixStartPoint
+  //      //console.log(latlong,UnixStartPoint);
+  //      $http.get('/weatherInfo/hist/'+ dsHistWeather).then((response) => {
+  //            var dailyMax = response.data.daily.data[0].temperatureMax;
+  //
+  //           var dailyMin = response.data.daily.data[0].temperatureMin;
+  //
+  //           //might not need an object of high/low temps, but perhaps with a line graph!
+  //           //  var dailyLoHi = {};
+  //           //  dailyLoHi.min = dailyMin;
+  //           //  dailyLoHi.max = dailyMax;
+  //           //
+  //
+  //           //set up an array to render!
+  //             pastWkLoHiTemp.push(dailyMax);
+  //             console.log(pastWkLoHiTemp);
+  //          //  vm.weatherInfoCurrent = response;
+  //        })
+  //          .catch((err) => {
+  //           console.log(err);
+  //          });
+  //    }
+  //    //as per the console logs, this appeared to fire the function PRIOR to the for loop clompleting for whatever reason!
+  //    pastWkLoHiTemp.reverse()
+  //    console.log(pastWkLoHiTemp.length, typeof pastWkLoHiTemp, x);
+  //    buildNewChart(pastWkLoHiTemp);
+  //
+  // }
+
+//
         function buildNewChart(dataToShow) {
         var ctx = document.getElementById("myChart");
         console.log(ctx,  dataToShow.length, dataToShow, dataToShow.data);

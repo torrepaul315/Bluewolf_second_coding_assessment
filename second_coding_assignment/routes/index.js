@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var https = require('https');
+var moment = require('moment');
+
 
 /* GET home page. */
 
@@ -25,9 +27,42 @@ router.get(`/:latlong`,(req, res, next) => {
        response.on("end", function(){
          if (response.statusCode === 200){
            try{
-            var data = JSON.parse(info);
-      //      console.log(data);
-            res.json(data);
+            var darkSky = JSON.parse(info);
+            console.log(darkSky);
+      //pull current weather info, plus high/low/summary/icon for day +1 & +2
+            var currentWeather = {};
+
+            currentWeather.currentTemp =
+            darkSky.currently.temperature;
+            currentWeather.currWIcon =
+            darkSky.currently.icon;
+            currentWeather.currWSummary =
+            darkSky.currently.summary;
+
+
+            currentWeather.tommHigh =
+            darkSky.daily.data[0].temperatureMax;
+            currentWeather.tommLow =
+            darkSky.daily.data[0].temperatureMin;
+            currentWeather.tommIcon =
+            darkSky.daily.data[0].icon;
+            currentWeather.tommSummary =
+            darkSky.daily.data[0].summary;
+
+
+            currentWeather.day2High =
+            darkSky.daily.data[1].temperatureMax;
+            currentWeather.day2Low =
+            darkSky.daily.data[1].temperatureMin;
+            currentWeather.day2Icon =
+            darkSky.daily.data[1].icon;
+            currentWeather.day2Summary=
+            darkSky.daily.data[1].summary;
+
+
+
+            console.log(moment().format('X'),currentWeather);
+            res.json(currentWeather);
 
            }catch(error){
              console.log("couldn't JSON parse!")
@@ -48,6 +83,8 @@ router.get(`/:latlong`,(req, res, next) => {
 
 //route to get historical data
 
+// moment().format('X')
+
 router.get(`/hist/:latlong`,(req, res, next) => {
     console.log("now hitting the hist route!")
     var lat = req.params.latlong;
@@ -58,7 +95,7 @@ router.get(`/hist/:latlong`,(req, res, next) => {
        //console.log('headers:', res.headers);
       var info ="";
        response.on('data', function(chunk){
-    //     console.log('response data', typeof d);
+        console.log('response data', typeof d);
         info += chunk;
 
        });
@@ -66,9 +103,12 @@ router.get(`/hist/:latlong`,(req, res, next) => {
        response.on("end", function(){
          if (response.statusCode === 200){
            try{
+            console.log('burritoooo!');
             var data = JSON.parse(info);
-      //      console.log(data);
-            res.json(data);
+            console.log(data);
+
+
+            //res.json('burritoooo!');
 
            }catch(error){
              console.log("couldn't JSON parse!")
