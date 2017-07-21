@@ -116,12 +116,12 @@
           console.log('curentTimeInUnix', currentTimeInUnix
           );
 
-          // var timeScrub =  moment.unix(currentTimeInUnix);
+           var timeScrub =  moment.unix(currentTimeInUnix);
 
         //  vm.posts = [exampObj];
           showCurrentWeather(response,timeScrub);
 //!!!!!turned this off while rendering current weather stuff!
-        //  getPastWeekWeather(currentTimeInUnix);
+        getPastWeekWeather(currentTimeInUnix);
         //  vm.weatherInfoCurrent = response;
         })
         .catch((err) => {
@@ -144,13 +144,13 @@
      weatherForecast.currentTemp = currentWeather.data.currently.apparentTemperature;
      weatherForecast.currWIcon = currentWeather.data.currently.icon;
      weatherForecast.currWSummary = currentWeather.data.currently.summary;
+     weatherForecast.currTime = timePrep;
+    //  var day = moment().format(timePrep);
+     console.log(timePrep, weatherForecast);
 
-     var day = moment().format(timePrep);
-     console.log(day, weatherForecast);
 
 
-
-     vm.posts = [weatherForecast];
+     vm.currentWeather = [weatherForecast];
 
 
 
@@ -163,13 +163,10 @@
        UnixStartPoint -= 86400;
        var dsHistWeather = latlong + ','+ UnixStartPoint
        //console.log(latlong,UnixStartPoint);
-       $http.get('/weatherInfo/'+ dsHistWeather).then((response) => {
+       $http.get('/weatherInfo/hist/'+ dsHistWeather).then((response) => {
              var dailyMax = response.data.daily.data[0].temperatureMax;
 
             var dailyMin = response.data.daily.data[0].temperatureMin;
-            //  console.log('dailyMax', dailyMax,
-            //  'dailyMin', dailyMin    )
-            //  latlong
 
             //might not need an object of high/low temps, but perhaps with a line graph!
             //  var dailyLoHi = {};
@@ -181,15 +178,10 @@
               pastWkLoHiTemp.push(dailyMax);
               console.log(pastWkLoHiTemp);
            //  vm.weatherInfoCurrent = response;
-
-
          })
            .catch((err) => {
             console.log(err);
            });
-
-
-
      }
      //as per the console logs, this appeared to fire the function PRIOR to the for loop clompleting for whatever reason!
      pastWkLoHiTemp.reverse()

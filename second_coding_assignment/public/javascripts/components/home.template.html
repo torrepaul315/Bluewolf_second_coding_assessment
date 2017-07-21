@@ -123,7 +123,7 @@
 
 
   <div class="row">
-    <div class="col-lg-7 col-md-5 col-sm-12 text-center">
+    <div class="col-lg-8 col-md-5 col-sm-12 text-center">
 
 
 
@@ -142,169 +142,90 @@
 </div>
 
 
-<!-- <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-  </div>
-</div>
-</nav>
-<div class="container">
 
-  <form name="$ctrl.newPostForm" novalidate ng-submit="$ctrl.createNewPost()" ng-show="$ctrl.newPostVis">
-    <div class='form-group'
-    ng-class="{
-      'has-error': $ctrl.newPostForm.title.$invalid,
-      'has-success': $ctrl.newPostForm.title.$valid
-      }">
-      <label for="title">Title</label>
-      <input
-      id="title"
-      class="form-control"
-      name="title"
-      ng-model="$ctrl.newPost.title"
-      required minlength="5"
-      type="text">
-      <span ng-show="newPostForm.title.$error.minlength">Username needs to be at least 5 characters</span>
-    </div>
-    <div class="form-group"
-    ng-class="{
-    'has-error': $ctrl.newPostForm.body.$invalid,
-    'has-success': $ctrl.newPostForm.body.$valid
-    }">
-      <label for="body">Body</label>
-      <textarea
-      id="body"
-      ng-model="$ctrl.newPost.body"
-      name="body"
-      class="form-control"
-      required minlength="20"
-      type="text"
-      ></textarea>
-      <span ng-show="newPostForm.body.$error.minlength">body needs to be at least one full sentence in length</span>
-    </div>
-    <div class="form-group"
-    ng-class="{
-    'has-error': $ctrl.newPostForm.author.$invalid,
-    'has-success': $ctrl.newPostForm.author.$valid
-    }">
-      <label for="author">Author</label>
-      <input
-      id="author"
-      ng-model="$ctrl.newPost.author"
-      name="author"
-      class="form-control"
-      required minlength="5"
-      type="text">
-      <span ng-show="newPostForm.author.$error.minlength">Please add Author name</span>
-    </div>
-    <div class="form-group" accesskey=""ng-class="{
-    'has-error': $ctrl.newPostForm.image.$invalid,
-    'has-success': $ctrl.newPostForm.image.$valid
-    }">
-      <label for="image-url">Image URL</label>
-      <input
-      id="image"
-      ng-model="$ctrl.newPost.image_url"
-      name="image_url"
-      class="form-control"
-      required minlength="10"
-      >
-      <span ng-show="newPostForm.image.$error.minlength">please add a valid image URL</span>
-    </div>
-    <div class="form-group">
-      <button
-      type="submit"
-      class="btn btn-primary" ng-disabled="$ctrl.newPostForm.$invalid">
-        Create Post
-      </button>
-    </div>
-  </form> -->
 
-  <div class="row" ng-repeat="postObj in $ctrl.posts | filter:search:strict | orderBy: $ctrl.orderByVal">
+  <div class="row" ng-repeat="info in $ctrl.currentWeather">
 
      <post data="postObj"></post>
-   <div class="col-md-12">
-    <div class="well">
+   <div class="col-md-3">
+    <div class="well currentInfo text-center">
       <div class="row">
-      <div class="col-md-2 col-sm-2 col-xs-2">
-        <img ng-src="{{postObj.image_url}}">
-        </div>
+        Today, {{info.currTime}}
+        <hr>
         <div class="media-body">
           <h4 class="media-heading">
-            {{postObj.title}}
-            |
-            <a><i class="glyphicon glyphicon-arrow-up"
-            ng-click="$ctrl.increment(postObj)"
-              ></i></a>
-            <a><i class="glyphicon glyphicon-arrow-down"
-            ng-click="$ctrl.decrement(postObj)"
-              ></i></a>
-            {{postObj.vote_count}}
-            <a ui-sref='edit({id: postObj.id})'>
-              <button
-              ng-model="postObj"
-              type="edit post"
-              class="btn btn-primary btn-sm"
-              >
-              Edit Post
-              </button>
-              </a>
-              <button
-              ng-click="$ctrl.deletePost(postObj.id)"
-              ng-model="postObj"
-              type="delete post"
-              class="btn btn-warning btn-sm"
-              >
-              Del Post
-              </button>
-
+            Current Temperature: {{info.currentTemp}}
           </h4>
-          <div class="text-right">
-            {{postObj.author}}
-          </div>
+
           <p>
-            {{postObj.body}}
+
           </p>
           <div>
-            Posted On: {{postObj.created_at | date:'medium'}}
-            |
-            <a ng-click="$ctrl.toggleComments(postObj)">
-            <i class="glyphicon  glyphicon-comment"></i>
-            <ng-pluralize count="postObj.comments.length"
-            when="{'0': 'be the first person to comment!',
-            '1': '1 comment',
-            'other': '{} comments'}">
-            </ng-pluralize>
-            </a>
-          </div>
 
-          <div class="row"
-          ng-show="postObj.commentsVis"
-          ng-submit="$ctrl.createNewComment(postObj)"
-          >
-            <div class="col-md-8">
-              <hr>
-            <div ng-repeat="indivComments in postObj.comments">
+          {{info.currWSummary}}
 
-              <p>
-                {{indivComments.content}}
-              </p>
-            </div>
-              <form class="form-inline">
-                <div class="form-group">
-                  <input
-                  id="newComment"
-                  ng-model="$ctrl.newComment"
-                  name="newComment"
-                  class="form-control">
-                </div>
-                <div class="form-group">
-                  <input type="submit" class="btn btn-primary">
-                </div>
-              </form>
+
+
             </div>
           </div>
         </div>
       </div>
 
     </div>
+    <!-- tomorrow's weather block! -->
+    <div class="col-md-3">
+     <div class="well currentInfo text-center">
+       <div class="row">
+         Today, {{info.currTime}}
+         <hr>
+         <div class="media-body">
+           <h4 class="media-heading">
+             Current Temperature: {{info.currentTemp}}
+           </h4>
+
+           <p>
+
+           </p>
+           <div>
+
+           {{info.currWSummary}}
+
+
+
+             </div>
+           </div>
+         </div>
+       </div>
+
+     </div>
+     <!-- two days out forecast info! -->
+     <div class="col-md-3">
+      <div class="well currentInfo text-center">
+        <div class="row">
+          Today, {{info.currTime}}
+          <hr>
+          <div class="media-body">
+            <h4 class="media-heading">
+              Current Temperature: {{info.currentTemp}}
+            </h4>
+
+            <p>
+
+            </p>
+            <div>
+
+            {{info.currWSummary}}
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
   </div>
 </div>
