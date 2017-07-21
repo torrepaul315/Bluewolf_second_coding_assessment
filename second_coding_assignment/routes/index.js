@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var https = require('https');
 var moment = require('moment');
+var dotenv = require('dotenv/config');
 
 
 /* GET home page. */
@@ -13,8 +14,8 @@ var moment = require('moment');
 router.get(`/:latlong`,(req, res, next) => {
     var lat = req.params.latlong;
   //  console.log('something happened!',lat);
-
-    https.get(`https://api.darksky.net/forecast/7907530ae0b513bbc106eb5287aa40f4/`+ lat, function (response) {
+     process.env.DARK_SKY
+    https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/`+ lat, function (response) {
     //  console.log('statusCode:', res.statusCode);
        //console.log('headers:', res.headers);
       var info ="";
@@ -90,7 +91,7 @@ router.get(`/hist/:latlong`,(req, res, next) => {
     var lat = req.params.latlong;
   //  console.log('something happened!',lat);
 
-    https.get(`https://api.darksky.net/forecast/7907530ae0b513bbc106eb5287aa40f4/`+ lat, function (response) {
+    https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/`+ lat, function (response) {
     //  console.log('statusCode:', res.statusCode);
        //console.log('headers:', res.headers);
       var info ="";
