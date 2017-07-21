@@ -1,10 +1,10 @@
 {
-  "name": "SkyCast Inc. - a second-coding-assignment",
+  "name": "skycast inc. - a second-coding-assignment",
   "version": "1.0.0",
-  "description": "App built for Bluewolf interview process",
+  "description": "app built for Bluewolf interview process",
   "engines": {
     "node":"7.8.0"
-  },
+  }
   "scripts": {
     "start": "node ./bin/www",
     "migrate": "knex migrate:latest"
