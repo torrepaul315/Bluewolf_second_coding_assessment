@@ -62,7 +62,7 @@ router.get(`/:latlong`,(req, res, next) => {
 
 
 
-            console.log(moment().format('X'),currentWeather);
+            console.log(currentWeather);
             res.json(currentWeather);
 
            }catch(error){
@@ -87,11 +87,13 @@ router.get(`/:latlong`,(req, res, next) => {
 // moment().format('X')
 
 router.get(`/hist/:latlong`,(req, res, next) => {
+    //moment().format('X')
+    var data
     console.log("now hitting the hist route!")
-    var lat = req.params.latlong;
-  //  console.log('something happened!',lat);
-
-    https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/`+ lat, function (response) {
+    var latWUnix = req.params.latlong + "," + (moment().format('X') - 604800);
+  console.log('something happened!',latWUnix);
+    
+    https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/`+ latWUnix, function (response) {
     //  console.log('statusCode:', res.statusCode);
        //console.log('headers:', res.headers);
       var info ="";
@@ -100,25 +102,32 @@ router.get(`/hist/:latlong`,(req, res, next) => {
         info += chunk;
 
        });
-
        response.on("end", function(){
          if (response.statusCode === 200){
            try{
             console.log('burritoooo!');
-            var data = JSON.parse(info);
+            data = JSON.parse(info);
             console.log(data);
+          //  res.json(data);
 
-
-            //res.json('burritoooo!');
-
-           }catch(error){
+           }
+           catch(error){
              console.log("couldn't JSON parse!")
            }
          } else {
            console.log("sorry something failed!")
          }
        });
-    })
+    }).then(comments => {
+      console.log('made it here?');
+      res.json(comments)}
+    )
+    .catch(err => next(err))
+
+
+
+
+
   //   .end(weatherInfo => {
   //     console.log('got hurr!');
   //   res.json(weatherInfo);

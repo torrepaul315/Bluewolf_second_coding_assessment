@@ -122,7 +122,7 @@
         //  vm.posts = [exampObj];
           showCurrentWeather(response);
 //!!!!!turned this off while rendering current weather stuff!
-      //  getPastWeekWeather(currentTimeInUnix);
+      getPastWeekWeather();
         //  vm.weatherInfoCurrent = response;
         })
         .catch((err) => {
@@ -160,12 +160,12 @@
 
 
 
-  function getPastWeekWeather(UnixStartPoint) {
+  function getPastWeekWeather() {
     console.log('hist weather fired');
-    UnixStartPoint -= 86400;
-    var dsHistWeather = latlong + ','+ UnixStartPoint
+    // UnixStartPoint -= 86400;
+    // var dsHistWeather = latlong
 
-    $http.get('/weatherInfo/hist/'+ dsHistWeather).then((response) => {
+    $http.get('/weatherInfo/hist/'+ latlong).then((response) => {
           var dailyMax = response.data.daily.data[0].temperatureMax;
           var dailyMin = response.data.daily.data[0].temperatureMin;
          //might not need an object of high/low temps, but perhaps with a line graph!

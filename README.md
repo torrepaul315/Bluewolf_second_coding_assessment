@@ -1,5 +1,7 @@
 # Bluewolf_second_coding_assessment
 
+
+deployed on Heroku at https://bluewolf-skycast.herokuapp.com/
 notes
 1- not happy with current date format...that said you can just extract the string....come back to polish that with moment if other pieces come together!
 
@@ -56,7 +58,7 @@ right now you're sending the whole dam response... then parsing that on the from
 
 then, use the res .finished stuff that vincent sent over
 
-!!!!!!!!!!!!!!think about this! 
+!!!!!!!!!!!!!!think about this!
 Escaping characters
 
 To escape characters in format strings, you can wrap the characters in square brackets.
