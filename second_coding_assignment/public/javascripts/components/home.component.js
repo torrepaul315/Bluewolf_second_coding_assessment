@@ -17,8 +17,10 @@
       let latitude
       let longitude
       var latlong
-      var pastWkLoHiTemp = []
-
+      var pastWkLoHiTemp = [];
+      var example = [75, 19, 3, 5, 64, 3];
+      var haveHistData = false;
+      console.log( example);
 
       vm.posts = [];
       console.log(vm.posts);
@@ -70,7 +72,7 @@
         address: vm.locationString
       }
       console.log(geoCode);
-      vm.posts.push(geoCode);
+      //vm.posts.push(geoCode);
       console.log(vm.posts);
       console.log("local array", vm.posts);
       //google.maps.Geocoder.geocode(GeocoderRequest);
@@ -109,23 +111,52 @@
   function findCurrentWeather(latlong) {
     console.log('time to actually hit the api!');
 
-    $http.get('/weatherInfo/'+ latlong).then((response) => {
+   $http.get('/weatherInfo/'+ latlong).then((response) => {
           var currentTimeInUnix = response.data.currently.time
           console.log('curentTimeInUnix', currentTimeInUnix
           );
-          // var unixMinusAday = currentTimeInUnix - 86400;
-          // var unixMinusaMonth = currentTimeInUnix - 2851200;
-          // var timeScrub =  moment.unix(currentTimeInUnix);
-          // var dayback = moment.unix(unixMinusAday);
-          // var monthBack = moment.unix(unixMinusaMonth);
 
-          getPastWeekWeather(currentTimeInUnix);
+          // var timeScrub =  moment.unix(currentTimeInUnix);
+
+        //  vm.posts = [exampObj];
+          showCurrentWeather(response,timeScrub);
+//!!!!!turned this off while rendering current weather stuff!
+        //  getPastWeekWeather(currentTimeInUnix);
         //  vm.weatherInfoCurrent = response;
         })
         .catch((err) => {
          console.log(err);
         });
   }
+  //  brainstorm! for currentweather I want to pull out
+  /* 1- current temp
+     2- weather info to show an icon of some sort
+     3- prolly connected to 2, a quick description!
+     4- also, log the day!
+      for future weather-
+      1- (projected) hi temp
+      2- weather info to show an icon of some sort
+      3- prolly connected to 2, a quick description!
+
+  */
+  function showCurrentWeather(currentWeather, timePrep) {
+     var weatherForecast = {};
+     weatherForecast.currentTemp = currentWeather.data.currently.apparentTemperature;
+     weatherForecast.currWIcon = currentWeather.data.currently.icon;
+     weatherForecast.currWSummary = currentWeather.data.currently.summary;
+
+     var day = moment().format(timePrep);
+     console.log(day, weatherForecast);
+
+
+
+     vm.posts = [weatherForecast];
+
+
+
+  }
+
+
 
   function getPastWeekWeather(UnixStartPoint) {
      for (var x = 0; x < 7; x++) {
@@ -139,15 +170,20 @@
             //  console.log('dailyMax', dailyMax,
             //  'dailyMin', dailyMin    )
             //  latlong
-             var dailyLoHi = {};
-             dailyLoHi.min = dailyMin;
-             dailyLoHi.max = dailyMax;
-             //console.log(dailyLoHi);
-             pastWkLoHiTemp.push(dailyLoHi)
 
+            //might not need an object of high/low temps, but perhaps with a line graph!
+            //  var dailyLoHi = {};
+            //  dailyLoHi.min = dailyMin;
+            //  dailyLoHi.max = dailyMax;
+            //
 
+            //set up an array to render!
+              pastWkLoHiTemp.push(dailyMax);
+              console.log(pastWkLoHiTemp);
            //  vm.weatherInfoCurrent = response;
-           })
+
+
+         })
            .catch((err) => {
             console.log(err);
            });
@@ -155,116 +191,56 @@
 
 
      }
+     //as per the console logs, this appeared to fire the function PRIOR to the for loop clompleting for whatever reason!
      pastWkLoHiTemp.reverse()
-     console.log(pastWkLoHiTemp);
+     console.log(pastWkLoHiTemp.length, typeof pastWkLoHiTemp, x);
+     buildNewChart(pastWkLoHiTemp);
+
   }
 
 // where I start my chart.js adventure!
-        // var ctx = document.getElementById("myChart");
-        // console.log(ctx);
-        // var myChart = new Chart(ctx, {
-        //     type: 'bar',
-        //     data: {
-        //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        //         datasets: [{
-        //             label: '# of Votes',
-        //             data: [12, 19, 3, 5, 2, 3],
-        //             backgroundColor: [
-        //                 'rgba(255, 99, 132, 0.2)',
-        //                 'rgba(54, 162, 235, 0.2)',
-        //                 'rgba(255, 206, 86, 0.2)',
-        //                 'rgba(75, 192, 192, 0.2)',
-        //                 'rgba(153, 102, 255, 0.2)',
-        //                 'rgba(255, 159, 64, 0.2)'
-        //             ],
-        //             borderColor: [
-        //                 'rgba(255,99,132,1)',
-        //                 'rgba(54, 162, 235, 1)',
-        //                 'rgba(255, 206, 86, 1)',
-        //                 'rgba(75, 192, 192, 1)',
-        //                 'rgba(153, 102, 255, 1)',
-        //                 'rgba(255, 159, 64, 1)'
-        //             ],
-        //             borderWidth: 1
-        //         }]
-        //     },
-        //     options: {
-        //         scales: {
-        //             yAxes: [{
-        //                 ticks: {
-        //                     beginAtZero:true
-        //                 }
-        //             }]
-        //         }
-        //     }
-        // });
+        function buildNewChart(dataToShow) {
+        var ctx = document.getElementById("myChart");
+        console.log(ctx,  dataToShow.length, dataToShow, dataToShow.data);
+        var myChart = new Chart(ctx,  {
+            type: 'bar',
+            data: {
+                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                datasets: [{
+                    label: 'HardRock!',
 
-
-
-
-
-
-// mah functions!
-
-
-      vm.createNewPost = function(){
-
-        vm.newPostForm.$setPristine();
-        vm.newPost.created_at = moment().calendar();
-        vm.newPost.vote_count = 0;
-        /* you need to hit the comments table upon a successful response from the post request for a new comment!*/
-
-        // vm.newPost.comments = 0;
-
-        console.log(vm.newPost);
-
-        $http.post('api/posts', vm.newPost)
-        .then((resp)=> {
-           console.log(resp);
-           $http.get('/api/posts')
-           .then((postsInDb) => {
-             console.log(postsInDb.data);
-             vm.posts = postsInDb.data;
-             vm.posts.created_at = moment().format(`{postsInDb.data.created_at}`);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        })
-        console.log(vm.posts);
-        delete vm.newPost
-        vm.newPostVis = !vm.newPostVis;
+                    //data: [75, 19, 3, 5, 64, 3],
+                    data: dataToShow,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
       }
-
-
-
     }
 
-
-
 }());
-
-// vm.posts =[
-//   {
-//   title: "titlechange!",
-//   author: "Linus Lane",
-//   image: "https://scontent-lga3-1.cdninstagram.com/hphotos-xft1/t51.2885-15/e35/11809944_1676694042554573_495250395_n.jpg",
-//   body: "Hey, hey, we're the Monkees, and people say we monkey around. But we're too busy singing to put anybody down. We're just tryin' to be friendly, come and watch us sing and play. We're the young gneration, and we've got something to say.",
-//   time: moment().subtract(5,'days').calendar(),
-//   counter:5,
-//   comments: [
-//   {comment:"monkeys are awesome but not as cool as birds"}
-//   ]},
-//   {title: "Monkey costumes are totally in this season",
-// author: "Linus Lane",
-// image: "https://scontent-lga3-1.cdninstagram.com/hphotos-xft1/t51.2885-15/e35/11809944_1676694042554573_495250395_n.jpg",
-// body: "Hey, hey, we're the Monkees, and people say we monkey around. But we're too busy singing to put anybody down. We're just tryin' to be friendly, come and watch us sing and play. We're the young gneration, and we've got something to say.",
-// time: moment().subtract(14,'days').calendar(),
-//
-// counter:0,
-// comments: [{
-//   comment:"I don't like monkeys!"
-// },
-// {comment:"monkeys are awesome but not as cool as birds"}]
-//   }
-// ]
