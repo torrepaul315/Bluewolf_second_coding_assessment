@@ -7,11 +7,12 @@ module.exports = {
     connection: {
       database: process.env.DATABASE_URL || 'dark-sky',
     }
+
   },
 
   production: {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: process.env.DATABASE_URL || 'dark-sky',
 
     migrations: {
       directory: './migrations'
@@ -19,11 +20,7 @@ module.exports = {
     seeds: {
       directory: './seeds'
     },
-
+    useNUllAsDefault:true
   }
 
 };
-// this is a carry over from reddit-clone. it was set up a lil differently!
-// connection: {
-//     database: process.env.DATABASE_URL || 'reddit-clone',
-//   }
