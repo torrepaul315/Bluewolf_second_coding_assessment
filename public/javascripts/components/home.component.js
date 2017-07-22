@@ -22,6 +22,8 @@
       var haveHistData = false;
       console.log( example);
 
+
+      vm.locationName = "Denver"
     //  vm.currentWeather = [];
       console.log(vm.posts);
 // working on getting a map up on page load!
@@ -166,8 +168,9 @@
     // var dsHistWeather = latlong
 
     $http.get('/weatherInfo/hist/'+ latlong).then((response) => {
-          var dailyMax = response.data.daily.data[0].temperatureMax;
-          var dailyMin = response.data.daily.data[0].temperatureMin;
+      console.log(response);
+          // var dailyMax = response.data.daily.data[0].temperatureMax;
+          // var dailyMin = response.data.daily.data[0].temperatureMin;
          //might not need an object of high/low temps, but perhaps with a line graph!
          //  var dailyLoHi = {};
          //  dailyLoHi.min = dailyMin;
@@ -175,9 +178,9 @@
          //
 
          //set up an array to render!
-           pastWkLoHiTemp.push(dailyMax);
-           console.log(pastWkLoHiTemp);
-           buildNewChart(pastWkLoHiTemp);
+          //  pastWkLoHiTemp.push(dailyMax);
+          //  console.log(pastWkLoHiTemp);
+          //  buildNewChart(pastWkLoHiTemp);
         //  vm.weatherInfoCurrent = response;
       })
         .catch((err) => {
@@ -233,7 +236,7 @@
             data: {
                 labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
                 datasets: [{
-                    label: 'HardRock!',
+                    label: 'Daily High Temperature',
 
                     //data: [75, 19, 3, 5, 64, 3],
                     data: dataToShow,

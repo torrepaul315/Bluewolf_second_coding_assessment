@@ -25,3 +25,8 @@ a {
 .currentInfo {
   height:300px;
 }
+
+.city-name {
+  height: 50px;
+  font-size: 30px;
+}

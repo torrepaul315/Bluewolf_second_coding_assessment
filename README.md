@@ -1,5 +1,7 @@
 # Bluewolf_second_coding_assessment
 
+review data binding! get city name to show! does it need to be in an ng-repeat? is there another format?
+
 
 deployed on Heroku at https://bluewolf-skycast.herokuapp.com/
 notes

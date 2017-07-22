@@ -22,16 +22,12 @@
             <form class="form-inline">
               <div class="form-inline">
                 <div class="form-group">
-                  <input type="text"
-                  placeholder="get weather by location"
-                  id="locationString"
-                  name="locationString"
-                  class="form-control" ng-model="$ctrl.locationString">
+                  <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control" ng-model="$ctrl.locationString">
                   </input>
                 </div>
-              <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
-              <!-- switched it to button -->
-              <input type="submit" class="btn btn-success">Get Weather</input>
+                <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
+                <!-- switched it to button -->
+                <input type="submit" class="btn btn-success">Get Weather</input>
               </div>
             </form>
           </div>
@@ -46,20 +42,114 @@
         </li>
       </ul>
     </div>
-<!-- <li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li> -->
+    <!-- <li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li> -->
   </div>
 </nav>
 <div class="container-fluid">
+  <div class="row city-name">Namespace for city{{locationName}}</div>
   <div class="row">
-    <div class="col-lg-7 col-md-5 col-sm-12"></div>
-    <div class="col-lg-1"></div>
-      <div id="gmaps" class="container-fluid col-lg-4 col-md-6 col-sm-12">
-        <div  id="map"></div>
+    <div class="col-lg-7 col-md-5 col-sm-12">
+      <div class="row" ng-repeat="data in $ctrl.currentWeather">
+
+
+        <post data="postObj"></post>
+        <div class="col-lg-4 col-md-4">
+          <div class="well currentInfo text-center">
+            <div class="row">
+              Today
+              <hr>
+              <div class="media-body">
+                <h4 class="media-heading">
+                  Current Temperature: {{data.currentTemp}}
+                </h4>
+
+                <p>
+                  {{data.currWSummary}} {{data.currWIcon}}
+
+                </p>
+                <div>
+
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- tomorrow's weather block! -->
+        <div class="col-lg-4 col-md-4">
+          <div class="well currentInfo text-center">
+            <div class="row">
+              Tomorrow
+              <hr>
+              <div class="media-body">
+                <h4 class="media-heading">
+                   Daily High: {{data.tommHigh}}
+                   Daily Low: {{data.tommLow}}
+                 </h4>
+
+                <p>
+                  {{data.tommSummary}}
+                </p>
+                <div>
+                  {{data.tommIcon}}
+
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- two days out forecast info! -->
+        <div class="col-lg-4 col-md-4">
+          <div class="well currentInfo text-center">
+            <div class="row">
+              two days out!
+              <!--  this is where you do moment plus a day -->
+              <hr>
+              <div class="media-body">
+                <h4 class="media-heading">
+                    daily high temperature: {{data.day2High}}
+                    daily low temperature: {{data.day2Low}}
+                  </h4>
+
+                <p>
+                  {{data.day2summary}}
+                </p>
+                <div>
+
+                  {{data.day2Icon}}
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
       </div>
+
+
+
+    </div>
+    <div class="col-lg-1"></div>
+    <div id="gmaps" class="container-fluid col-lg-3 col-md-6 col-sm-12">
+      <div id="map"></div>
+    </div>
   </div>
 </div>
 <div class="container-fluid">
-  <div class="row" ng-repeat="data in $ctrl.currentWeather">
+  <!-- <div class="row" ng-repeat="data in $ctrl.currentWeather">
     <post data="data"></post>
    <div class="col-md-3">
     <div class="well text center">
@@ -92,7 +182,7 @@
 
           </h4>
           <div class="text-right">
-            {{postObj.author}}
+            {{data.t}}
           </div>
           <p>
             {{postObj.body}}
@@ -109,7 +199,7 @@
       </div>
 
     </div>
-  </div>
+  </div> -->
 
 
 
@@ -119,13 +209,13 @@
 
 
 
-  </div>
+</div>
 <!-- this will take a lot of editing!  -->
 
 
 
-  <div class="row">
-    <div class="col-lg-8 col-md-5 col-sm-12 text-center">
+<div class="row">
+  <div class="col-lg-8 col-md-5 col-sm-12 text-center">
 
 
 
@@ -133,108 +223,23 @@
 
 
 
-     <h1>Max/Min temps for the past week</h1>
+    <h1>Max/Min temps for the past week</h1>
 
 
-      <canvas id="myChart" width="400" height="100"></canvas>
-
-    </div>
+    <canvas id="myChart" width="400" height="100"></canvas>
 
   </div>
+
 </div>
-{{data.currentTemp}}
+</div>
+<!-- {{data.currentTemp}}
 
 {{data.currWSummary}}
 
 
-{{data.currWIcon}}
+{{data.currWIcon}} -->
 
 
 
-  <div class="row" ng-repeat="data in $ctrl.currentWeather">
-  
 
-     <post data="postObj"></post>
-   <div class="col-md-3">
-    <div class="well currentInfo text-center">
-      <div class="row">
-        Today, Friday
-        <hr>
-        <div class="media-body">
-          <h4 class="media-heading">
-            Current Temperature: {{data.currentTemp}}
-          </h4>
-
-          <p>
-            {{data.currWIcon}}
-
-          </p>
-          <div>
-
-          {{data.currWSummary}}
-
-
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <!-- tomorrow's weather block! -->
-    <div class="col-md-3">
-     <div class="well currentInfo text-center">
-       <div class="row">
-         Today,
-         <hr>
-         <div class="media-body">
-           <h4 class="media-heading">
-             Current Temperature: {{info.currentTemp}}
-           </h4>
-
-           <p>
-
-           </p>
-           <div>
-
-           {{info.currWSummary}}
-
-
-
-             </div>
-           </div>
-         </div>
-       </div>
-
-     </div>
-     <!-- two days out forecast info! -->
-     <div class="col-md-3">
-      <div class="well currentInfo text-center">
-        <div class="row">
-          Today,
-          <hr>
-          <div class="media-body">
-            <h4 class="media-heading">
-              Current Temperature: {{info.currentTemp}}
-            </h4>
-
-            <p>
-
-            </p>
-            <div>
-
-            {{info.currWSummary}}
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
-
-  </div>
 </div>

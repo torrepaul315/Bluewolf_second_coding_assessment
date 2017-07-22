@@ -11,68 +11,68 @@ var dotenv = require('dotenv/config');
 
 
 //router.get("darksky") with variabl
-router.get(`/:latlong`,(req, res, next) => {
-    var lat = req.params.latlong;
+router.get(`/:latlong`, (req, res, next) => {
+  var lat = req.params.latlong;
   //  console.log('something happened!',lat);
-     process.env.DARK_SKY
-    https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/`+ lat, function (response) {
+  process.env.DARK_SKY
+  https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/` + lat, function(response) {
     //  console.log('statusCode:', res.statusCode);
-       //console.log('headers:', res.headers);
-      var info ="";
-       response.on('data', function(chunk){
-    //     console.log('response data', typeof d);
-        info += chunk;
+    //console.log('headers:', res.headers);
+    var info = "";
+    response.on('data', function(chunk) {
+      //     console.log('response data', typeof d);
+      info += chunk;
 
-       });
+    });
 
-       response.on("end", function(){
-         if (response.statusCode === 200){
-           try{
-            var darkSky = JSON.parse(info);
-            console.log(darkSky);
-      //pull current weather info, plus high/low/summary/icon for day +1 & +2
-            var currentWeather = {};
+    response.on("end", function() {
+      if (response.statusCode === 200) {
+        try {
+          var darkSky = JSON.parse(info);
+          //console.log(darkSky);
+          //pull current weather info, plus high/low/summary/icon for day +1 & +2
+          var currentWeather = {};
 
-            currentWeather.currentTemp =
+          currentWeather.currentTemp =
             darkSky.currently.temperature;
-            currentWeather.currWIcon =
+          currentWeather.currWIcon =
             darkSky.currently.icon;
-            currentWeather.currWSummary =
+          currentWeather.currWSummary =
             darkSky.currently.summary;
 
 
-            currentWeather.tommHigh =
+          currentWeather.tommHigh =
             darkSky.daily.data[0].temperatureMax;
-            currentWeather.tommLow =
+          currentWeather.tommLow =
             darkSky.daily.data[0].temperatureMin;
-            currentWeather.tommIcon =
+          currentWeather.tommIcon =
             darkSky.daily.data[0].icon;
-            currentWeather.tommSummary =
+          currentWeather.tommSummary =
             darkSky.daily.data[0].summary;
 
 
-            currentWeather.day2High =
+          currentWeather.day2High =
             darkSky.daily.data[1].temperatureMax;
-            currentWeather.day2Low =
+          currentWeather.day2Low =
             darkSky.daily.data[1].temperatureMin;
-            currentWeather.day2Icon =
+          currentWeather.day2Icon =
             darkSky.daily.data[1].icon;
-            currentWeather.day2Summary=
+          currentWeather.day2Summary =
             darkSky.daily.data[1].summary;
 
 
 
-            console.log(currentWeather);
-            res.json(currentWeather);
+          //console.log(currentWeather);
+          res.json(currentWeather);
 
-           }catch(error){
-             console.log("couldn't JSON parse!")
-           }
-         } else {
-           console.log("sorry something failed!")
-         }
-       });
-    })
+        } catch (error) {
+          console.log("couldn't JSON parse!")
+        }
+      } else {
+        console.log("sorry something failed!")
+      }
+    });
+  })
   //   .end(weatherInfo => {
   //     console.log('got hurr!');
   //   res.json(weatherInfo);
@@ -86,56 +86,88 @@ router.get(`/:latlong`,(req, res, next) => {
 
 // moment().format('X')
 
-router.get(`/hist/:latlong`,(req, res, next) => {
-    //moment().format('X')
-    var data
-    console.log("now hitting the hist route!")
-    var latWUnix = req.params.latlong + "," + (moment().format('X') - 604800);
-  console.log('something happened!',latWUnix);
-    
-    https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/`+ latWUnix, function (response) {
-    //  console.log('statusCode:', res.statusCode);
-       //console.log('headers:', res.headers);
-      var info ="";
-       response.on('data', function(chunk){
-        console.log('response data', typeof d);
-        info += chunk;
+//as per vincent- keep in mind that server side things might not come back in order- I'm currently setting it up to do so, but you might want to refactor a sort either server or client side!
 
-       });
-       response.on("end", function(){
-         if (response.statusCode === 200){
-           try{
-            console.log('burritoooo!');
-            data = JSON.parse(info);
-            console.log(data);
-          //  res.json(data);
+router.get(`/hist/:latlong`, (req, res, next) => {
+  //moment().format('X')
+  var data
+  console.log("now hitting the hist route!")
 
-           }
-           catch(error){
-             console.log("couldn't JSON parse!")
-           }
-         } else {
-           console.log("sorry something failed!")
-         }
-       });
-    }).then(comments => {
-      console.log('made it here?');
-      res.json(comments)}
-    )
-    .catch(err => next(err))
+  var dayInSecs = 86400;
+  var daysInWeek = 7;
+  var weekInSecs = dayInSecs * daysInWeek;
+  var weekAgoInUnix = moment().format('X') - weekInSecs
+  var histWeatherDataArray = [];
+  var darkskyRequests = [];
+
+  console.log('something happened!', latWUnix);
+  for (var x = 0; x < daysInWeek; x++) {
+    var unixTimestampForHistoricalDay = weekAgoInUnix + (dayInSecs * x);
+
+    var latWUnix = req.params.latlong + "," + unixTimestampForHistoricalDay;
+    var darkskyRequest = https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/` + latWUnix, function(response) {
+        var info = "";
+        response.on('data', function(chunk) {
+          console.log('response data', typeof d);
+          info += chunk;
+        });
+        response.on("end", function() {
+            if (response.statusCode === 200 && x < 6) {
+              try {
+                console.log('burritoooo!');
+                data = JSON.parse(info);
+                console.log( typeof data);
+                histWeatherDataArray.push(data)
+              } catch (error) {
+                console.log("couldn't JSON parse!")
+              }
+            } else {
+              try {
+                console.log('burritoooo!');
+                data = JSON.parse(info);
+                console.log(typeof data);
+                histWeatherDataArray.push(data)
+              } catch (error) {
+                console.log("couldn't JSON parse!")
+              }
+            }
+
+          })
+          // else {
+          //   console.log("sorry something failed!")
+          // }
+        });
+        darkskyRequests.push(darkskyRequest)
+    }
+
+    isDone = function() {
+      console.log("timeout done")
+
+      if (histWeatherDataArray.length == daysInWeek) {
+        console.log("at the end ", histWeatherDataArray)
+        res.json(histWeatherDataArray)
+      } else {
+        setTimeout(isDone, 50);
+      }
+    }
+    setTimeout(isDone, 50);
+
+  });
+
+
+//.catch(err => next(err))
 
 
 
 
 
-  //   .end(weatherInfo => {
-  //     console.log('got hurr!');
-  //   res.json(weatherInfo);
-  // }).catch(err => {
-  //   console.log("got hurr to errorland!");
-  //   next(err)
-  // })
-});
+//   .end(weatherInfo => {
+//     console.log('got hurr!');
+//   res.json(weatherInfo);
+// }).catch(err => {
+//   console.log("got hurr to errorland!");
+//   next(err)
+// })
 
 
 /* notes from vincent ie chart issue
