@@ -96,7 +96,8 @@ router.get(`/hist/:latlong`, (req, res, next) => {
   var dayInSecs = 86400;
   var daysInWeek = 7;
   var weekInSecs = dayInSecs * daysInWeek;
-  var weekAgoInUnix = moment().format('X') - weekInSecs
+  var weekAgoInUnix = moment().format('X') - weekInSecs;
+  console.log(weekAgoInUnix);
   var histWeatherDataArray = [];
   var darkskyRequests = [];
 
@@ -112,25 +113,31 @@ router.get(`/hist/:latlong`, (req, res, next) => {
           info += chunk;
         });
         response.on("end", function() {
-            if (response.statusCode === 200 && x < 6) {
+            if (response.statusCode === 200) {
               try {
-                console.log('burritoooo!');
-                data = JSON.parse(info);
-                console.log( typeof data);
-                histWeatherDataArray.push(data)
-              } catch (error) {
-                console.log("couldn't JSON parse!")
-              }
-            } else {
-              try {
-                console.log('burritoooo!');
-                data = JSON.parse(info);
-                console.log(typeof data);
-                histWeatherDataArray.push(data)
+                console.log('burritoooo1');
+                histWbyDay = JSON.parse(info);
+                var dailyHigh = histWbyDay.daily.data[0].apparentTemperatureMax;
+                console.log(
+                  dailyHigh
+                );
+
+
+                histWeatherDataArray.push(dailyHigh);
               } catch (error) {
                 console.log("couldn't JSON parse!")
               }
             }
+            // else {
+            //   try {
+            //     console.log('burritoooo!');
+            //     data = JSON.parse(info);
+            //     console.log(typeof data);
+            //     histWeatherDataArray.push(data)
+            //   } catch (error) {
+            //     console.log("couldn't JSON parse!")
+            //   }
+            // }
 
           })
           // else {
