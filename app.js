@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var darkSkyQueries = require('./routes/darkSkyQueries');
+//var darkSkyQueries = require('./routes/darkSkyQueries.js');
 var database = require('./routes/database');
 var http = require('http');
 

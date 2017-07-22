@@ -7,7 +7,7 @@ var dotenv = require('dotenv/config');
 
 /* GET home page. */
 
-// ` https://api.darksky.net/forecast/DARK_SKY/${lat},${long}`
+
 
 
 //router.get("darksky") with variabl
