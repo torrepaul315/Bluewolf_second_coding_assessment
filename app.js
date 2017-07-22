@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var darkSkyQueries = require('./routes/darkSkyQueries.js');
+var weatherInfo = require('./routes/weatherInfo');
 var database = require('./routes/database');
 var http = require('http');
 
@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, '/../', 'node_modules')))
 //app.engine('.html', require('ejs').renderFile);
 
 
-app.use('/weatherInfo', darkSkyQueries);
+app.use('/weatherInfo', weatherInfo);
 app.use('/database', database);
 
 
