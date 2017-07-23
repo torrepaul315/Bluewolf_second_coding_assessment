@@ -1,5 +1,5 @@
 (function() {
-  'use strict'
+  'use strict';
 
   angular.module('app')
     .component('startPage', {
@@ -20,7 +20,18 @@
     let latlong
     let geoCode
 
-    let userName = 3;
+    vm.userName = 3;
+    vm.lastFiveSearches;
+
+
+
+    vm.changeUser = function(id){
+      console.log('wired up!',id,'username',vm.userName )
+      vm.userName = id;
+      console.log(vm.userName)
+      getSearchHistoryByUser(vm.userName);
+    }
+    //getSearchHistoryByUser()
     //  $scope.showSearchLocation = $scope.showSearchLocation || {};
     //  $scope.showSearchLocation.start = "Denver";
     vm.locationName = "londres";
@@ -42,7 +53,7 @@
       geocoder = new google.maps.Geocoder();
 
       map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 11,
+        zoom: 11
         //  center: uluru
       });
       // var marker = new google.maps.Marker({
@@ -73,13 +84,12 @@
       };
       //trying it out down here
       getUsers()
-      getSearchHistoryByUser(3)
+      getSearchHistoryByUser(vm.userName)
     }
 
     // vm.getLatLong = function(locationString)
     vm.getLatLong = function() {
-      console.log('hooked up!',
-        vm.locationString);
+      console.log('hooked up!', vm.locationString);
       geoCode = {
         address: vm.locationString
       }
@@ -99,8 +109,7 @@
             'latitude',
             results[0].geometry.viewport.f.b,
             'longitude',
-            results[0].geometry.viewport.b.b,
-
+            results[0].geometry.viewport.b.b
           );
           latitude = results[0].geometry.viewport.f.b;
           longitude = results[0].geometry.viewport.b.b;
@@ -112,7 +121,7 @@
             map: map,
             position: results[0].geometry.location
           });
-          addToUserSearchHistory(userName, geoCode);
+          addToUserSearchHistory(vm.userName, geoCode);
 
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
@@ -122,10 +131,8 @@
 
     function findCurrentWeather(latlong) {
       $http.get('/weatherInfo/' + latlong).then((response) => {
-          console.log(response);
           showCurrentWeather(response);
-
-        //  getPastWeekWeather();
+          getPastWeekWeather();
         })
         .catch((err) => {
           console.log(err);
@@ -133,19 +140,13 @@
     }
 
     function showCurrentWeather(currentWeather) {
-      console.log(currentWeather);
+      //console.log(currentWeather);
 
       var datesAdded = currentWeather.data;
-      console.log
       datesAdded.tomorrowDay = moment().add(1, 'days').format('dddd');
       datesAdded.day2Day = moment().add(2, 'days').format('dddd');
       vm.currentWeather = [datesAdded];
-
-
-
     }
-
-
 
     function getPastWeekWeather() {
       console.log('hist weather fired');
@@ -155,7 +156,7 @@
           var dailyHighTemps = histWeatherData[0];
           var dailyLowTemps = histWeatherData[1];
           var dailyHumidity = histWeatherData[2];
-//hmm, just refactor this bad boy?
+//hmm, just refactor this bad boy- to a for loop, but ideally a H.O.F!
           var dayLabels = [
             moment().subtract(7, 'days').format('LL'),
             moment().subtract(6, 'days').format('LL'),
@@ -269,8 +270,9 @@
     }
 
     function getUsers() {
-      $http.get('/database/users').then((response) => {
-          console.log(response);
+      $http.get('/database/users').then((listOfUsers) => {
+          console.log(listOfUsers.data);
+          vm.users= listOfUsers.data;
         })
         .catch((err) => {
           console.log(err);
@@ -279,7 +281,8 @@
 
     function getSearchHistoryByUser(user_id) {
       $http.get('/database/search_history/' + user_id).then((response) => {
-          console.log(response);
+          vm.lastFiveSearches = response.data.slice(0,5);
+          console.log(vm.lastFiveSearches);
         })
         .catch((err) => {
           console.log(err);

@@ -3,19 +3,23 @@ var router = express.Router();
 var https = require('https');
 var moment = require('moment');
 var dotenv = require('dotenv/config');
+//come back to this!
+var console  = require('console');
 
+//think! refactor vars to consts and lets
 
 /* GET home page. */
 
-
+const DARK_SKY_API_POLLING_TIME = `${process.env.DARK_SKY_API_POLLING_TIME}`;
+const DARK_SKY_ENDPOINT = `${process.env.DARK_SKY_ENDPOINT}/${process.env.DARK_SKY_APIKEY}/`;
 
 
 //router.get("darksky") with variabl
 router.get(`/:latlong`, (req, res, next) => {
   var lat = req.params.latlong;
+  ///! this is an example of switching to a console.log the line below!
   //  console.log('something happened!',lat);
-  process.env.DARK_SKY
-  https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/` + lat, function(response) {
+  https.get(DARK_SKY_ENDPOINT + lat, function(response) {
     //  console.log('statusCode:', res.statusCode);
     //console.log('headers:', res.headers);
     var info = "";
@@ -38,7 +42,7 @@ router.get(`/:latlong`, (req, res, next) => {
           currentWeather.currWSummary =
             darkSky.currently.summary;
 
-
+//think of refactoring this into a for loop!
           currentWeather.tommHigh =
             Math.round(darkSky.daily.data[0].temperatureMax);
           currentWeather.tommLow =
@@ -55,7 +59,7 @@ router.get(`/:latlong`, (req, res, next) => {
             console.log('going into logic!');
             if (currentWeather.tommPrecip.charAt(2) === '0'){
               currentWeather.tommPrecip = currentWeather.tommPrecip.slice(3);
-            } else{
+            } else {
             currentWeather.tommPrecip = currentWeather.tommPrecip.slice(2);
             }
           }
@@ -121,9 +125,9 @@ router.get(`/hist/:latlong`, (req, res, next) => {
     var unixTimestampForHistoricalDay = weekAgoInUnix + (dayInSecs * x);
 
     var latWUnix = req.params.latlong + "," + unixTimestampForHistoricalDay;
-    var darkskyRequest = https.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY}/` + latWUnix, function(response) {
+    var darkskyRequest = https.get(DARK_SKY_ENDPOINT + latWUnix, function(response) {
         var info = "";
-        response.on('data', function(chunk) {
+        response.on("data", function(chunk) {
 
           info += chunk;
         });
@@ -131,23 +135,29 @@ router.get(`/hist/:latlong`, (req, res, next) => {
             if (response.statusCode === 200) {
               try {
                 var histWbyDay = JSON.parse(info);
-                console.log('burritoooo1', histWbyDay);
-
-                var dailyHigh = Math.round(histWbyDay.daily.data[0].apparentTemperatureMax);
-                var dailyLow = Math.round(histWbyDay.daily.data[0].apparentTemperatureMin);
-                var dailyHumidity = Math.round(histWbyDay.daily.data[0].humidity);
-
-                console.log(
-                  dailyHigh, dailyLow, dailyHumidity
-                );
-                highTempArray.push(dailyHigh);
-                lowTempArray .push(dailyLow);
-                humidityArray.push(dailyHumidity);
-
-            //  histWeatherDataArray.push(dailyHigh);
+          //      console.log('burritoooo1', histWbyDay);
               } catch (error) {
-                console.log(error, " hist weather couldn't JSON parse!")
+                console.log(error, " hist weather couldn't JSON parse!");
+                return;
               }
+
+// what is thing???
+              var thing = histWbyDay.daily.data[0];
+              var dailyHigh = Math.round(thing.apparentTemperatureMax);
+              var dailyLow = Math.round(thing.apparentTemperatureMin);
+              var dailyHumidity = thing.humidity;
+
+              // console.log(
+              // thing,
+              // 'humidity long form' , histWbyDay.daily.data[0].humidity,
+              //   dailyHigh, dailyLow, dailyHumidity
+              // );
+              highTempArray.push(dailyHigh);
+              lowTempArray .push(dailyLow);
+              humidityArray.push(dailyHumidity);
+              //  histWeatherDataArray.push(dailyHigh);
+            } else {
+              console.log("Unsuccessful API call to Darksky, status code: ", response.statusCode);
             }
           })
           // else {
@@ -160,16 +170,16 @@ router.get(`/hist/:latlong`, (req, res, next) => {
     isDone = function() {
       console.log("timeout done")
 
-      if (highTempArray.length == daysInWeek) {
-         histWeatherDataArray.push(highTempArray,lowTempArray,humidityArray);
+      if (highTempArray.length === daysInWeek) {
+         histWeatherDataArray.push(highTempArray, lowTempArray, humidityArray);
 
         console.log("at the end ", histWeatherDataArray)
         res.json(histWeatherDataArray)
       } else {
-        setTimeout(isDone, 50);
+        setTimeout(isDone, DARK_SKY_API_POLLING_TIME);
       }
     }
-    setTimeout(isDone, 50);
+    setTimeout(isDone, DARK_SKY_API_POLLING_TIME);
 
   });
 

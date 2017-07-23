@@ -24,6 +24,7 @@
                 <div class="form-group">
                   <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control" ng-model="$ctrl.locationString">
                   </input>
+                  
                 </div>
                 <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
                 <!-- switched it to button -->
@@ -34,10 +35,11 @@
         </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>Sort by {{ view.currentSort }}</span> <span class="caret"></span></a>
+          <!-- double check is dropdown menu a bootstrap thing? -->
           <ul class="dropdown-menu">
-            <li><a ng-click="$ctrl.orderByVal='-vote_count'">Votes</a></li>
-            <li><a ng-click="$ctrl.orderByVal='title'">Title</a></li>
-            <li><a ng-click="$ctrl.orderByVal='-created_at'">Date</a></li>
+            <div ng-repeat="user in $ctrl.users">
+              <li><a ng-click="$ctrl.changeUser(user.id)" ng-model='user'> {{user.user_name}}</a></li>
+            </div>
           </ul>
         </li>
       </ul>
@@ -90,7 +92,7 @@
                    <p>
                      {{data.tommSummary}}
                    </p>
-                  <img class="chanceOfRain fixed-bottom" src="images/raindrop.png"/>{{data.tommPrecip}} %
+                  <img class="chanceOfRain" src="images/raindrop.png"/>{{data.tommPrecip}} %
                 </div>
               </div>
             </div>

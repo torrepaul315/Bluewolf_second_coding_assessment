@@ -14,9 +14,9 @@
       .state({
         name: 'home',
         url: '/',
-        component: 'startPage',
+        component: 'startPage'
       })
-    
+
   }
 
 }());

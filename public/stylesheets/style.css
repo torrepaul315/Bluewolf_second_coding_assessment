@@ -15,7 +15,9 @@ a {
 
    /*#06354d#035darkslategrayhsl(200,85,16)rgb(6,53,77)*/
 }
-
+.chanceOfRain {
+  margin-bottom: -10px;
+}
 .climacon {
   height: 100px;
   width:100px;
