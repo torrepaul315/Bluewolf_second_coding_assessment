@@ -16,11 +16,7 @@
         url: '/',
         component: 'startPage',
       })
-      // .state({
-      //   name: 'googleMaps',
-      //   url:'/letsgetsomeweather!',
-      //   component:'googMaps'
-      // })
+    
   }
 
 }());

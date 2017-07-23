@@ -42,39 +42,32 @@
         </li>
       </ul>
     </div>
-    <!-- <li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li> -->
+
   </div>
 </nav>
 <div class="container-fluid">
+  <p ng-bind="showSearchLocation.start"></p>
+  <div>
+    <p>First name: {{locationName}}</p>
+
   <div class="row city-name">Namespace for city{{locationName}}</div>
+  </div>
   <div class="row">
     <div class="col-lg-7 col-md-5 col-sm-12">
       <div class="row" ng-repeat="data in $ctrl.currentWeather">
-
-
         <post data="postObj"></post>
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
-              Today
+              <h3 class="text-left day">Current Weather</h3>
               <hr>
               <div class="media-body">
-                <h4 class="media-heading">
-                  Current Temperature: {{data.currentTemp}}
+                <img class="climacon" ng-src="images/{{data.currWIcon}}.png"/>
+                <h4 class="media-heading temps">
+                  {{data.currentTemp}}°
                 </h4>
-
-                <p>
-                  {{data.currWSummary}}
-
-                </p>
-                <img ng-style='{{data.currWIcon}}'/>
-
-                <div>
-                      {{data.currWIcon}}
-
-
-
-
+                <div class="biggernudge">
+                    {{data.currWSummary}}
                 </div>
               </div>
             </div>
@@ -85,23 +78,19 @@
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
-              {{data.tomorrowDay}}
+              <h3 class="text-left day ">{{data.tomorrowDay}}</h3>
               <hr>
               <div class="media-body">
-                <h4 class="media-heading">
-                   Daily High: {{data.tommHigh}}
-                   Daily Low: {{data.tommLow}}
-                 </h4>
-
-                <p>
-                  {{data.tommSummary}}
-                </p>
                 <div>
-                  {{data.tommIcon}}
-
-
-
-
+                  <img class="climacon" ng-src="images/{{data.tommIcon}}.png"/>
+                  <h4 class="media-heading text-left temps">
+                     <div class="lilnudge">HIGH {{data.tommHigh}}°</div>
+                     LOW {{data.tommLow}}°
+                   </h4>
+                   <p>
+                     {{data.tommSummary}}
+                   </p>
+                  <img class="chanceOfRain fixed-bottom" src="images/raindrop.png"/>{{data.tommPrecip}} %
                 </div>
               </div>
             </div>
@@ -112,42 +101,28 @@
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
-              <h3>{{data.day2Day}}</h3>
-              <!--  this is where you do moment plus a day -->
+              <h3 class="text-left day ">{{data.day2Day}}</h3>
               <hr>
               <div class="media-body">
-                <h4 class="media-heading">
-                    daily high temperature: {{data.day2High}}
-                    daily low temperature: {{data.day2Low}}
-                  </h4>
-
+                <img class="climacon" ng-src="images/{{data.day2Icon}}.png"/>
+                <h4 class="media-heading text-left temps">
+                    <div class="lilnudge">
+                    HIGH {{data.day2High}}°
+                    </div>
+                    LOW {{data.day2Low}}°
+                </h4>
                 <p>
                   {{data.day2Summary}}
                 </p>
-                <img class="climacon" src="images/partiallyCloudy.png"/>
-                <div class="cloudy">
-
-
-                  {{data.day2Icon}}
-
-
-
-                </div>
+                  <img class="chanceOfRain" src="images/raindrop.png"/>{{data.day2Precip}} %
               </div>
             </div>
           </div>
-
         </div>
-
-
-
       </div>
-
-
-
     </div>
-    <div class="col-lg-1"></div>
-    <div id="gmaps" class="container-fluid col-lg-3 col-md-6 col-sm-12">
+    <!-- <div class="col-lg-1"></div> -->
+    <div id="gmaps" class="container-fluid col-lg-5 col-md-6 col-sm-12">
       <div id="map"></div>
     </div>
   </div>
@@ -219,19 +194,11 @@
 
 
 <div class="row">
-  <div class="col-lg-8 col-md-5 col-sm-12 text-center">
-
-
-
-
-
-
-
-    <!-- <h1>Max/Min temps for the past week</h1> -->
-
-
-    <canvas id="myChart" width="400" height="100"></canvas>
-
+  <div class="col-lg-6 col-md-6 col-sm-12 text-center">
+    <canvas id="tempChart"  height="100"></canvas>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-12 text-center">
+    <canvas id="humidityChart"  height="100"></canvas>
   </div>
 
 </div>

@@ -24,3 +24,23 @@ module.exports = {
   }
 
 };
+
+
+// var dailyHigh = histWbyDay.daily.data[0].apparentTemperatureMax;
+// var dailylow = histWbyDay.daily.data[0].apparentTemperatureMin;
+// var dailyHumidity = histWbyDay.daily.data[0].humidity;
+//
+//
+// console.log(
+//   dailyHigh, dailyLow, dailyHumidity
+// );
+//
+//
+// HighTempArray.push(dailyHigh);
+// LowTempArray .push(dailyLow);
+// HumidityArray.push(dailyHumidity);
+//
+// var HighTempArray = [];
+// var LowTempArray = [];
+// var HumidityArray= [];
+// histWeatherDataArray.push(HighTempArray,LowTempArray,HumidityArray);
