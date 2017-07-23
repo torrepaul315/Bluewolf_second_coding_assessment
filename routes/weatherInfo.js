@@ -34,6 +34,7 @@ router.get(`/:latlong`, (req, res, next) => {
         try {
           var darkSky = JSON.parse(info);
           var currentWeather = {};
+          console.log(darkSky);
 
           currentWeather.currentTemp =
             Math.round(darkSky.currently.temperature);

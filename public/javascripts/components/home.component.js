@@ -17,14 +17,17 @@
     let map
     let latitude
     let longitude
+    //instead of reg lat long, convert to vm.latlong?
     let latlong
+
     let geoCode
 
     vm.userName = 3;
     vm.lastFiveSearches;
 
-
-
+    vm.latlong
+  //do I even need to declare these? hmm
+    //vm.newSearch
     vm.changeUser = function(id){
       console.log('wired up!',id,'username',vm.userName )
       vm.userName = id;
@@ -36,7 +39,7 @@
     //  $scope.showSearchLocation.start = "Denver";
     vm.locationName = "londres";
     //do I need this?   var haveHistData = false;
-
+   
 
     //
     // do I need this either? vm.locationName = "Denver"
@@ -87,11 +90,23 @@
       getSearchHistoryByUser(vm.userName)
     }
 
+    vm.newSearch = function() {
+      console.log(vm.newLocation)
+    }
+
+
     // vm.getLatLong = function(locationString)
-    vm.getLatLong = function() {
-      console.log('hooked up!', vm.locationString);
+    vm.getLatLong = function(location) {
+    //I've purposely altered this away from using "vm.locationString...the search is wired up differently! "
+      console.log('hooked up!',location, vm.locationString);
+      if (location){
       geoCode = {
-        address: vm.locationString
+        address: location
+        }
+      } else {
+        geoCode = {
+          address: vm.locationString
+        }
       }
       console.log(geoCode);
 
@@ -113,9 +128,9 @@
           );
           latitude = results[0].geometry.viewport.f.b;
           longitude = results[0].geometry.viewport.b.b;
-          latlong = latitude.toPrecision(8) + ',' + longitude.toPrecision(8);
+          vm.latlong = latitude.toPrecision(8) + ',' + longitude.toPrecision(8);
 
-          findCurrentWeather(latlong);
+          findCurrentWeather(vm.latlong);
           map.setCenter(results[0].geometry.location);
           var marker = new google.maps.Marker({
             map: map,
@@ -128,9 +143,12 @@
         }
       });
     }
+//funct had latlong in it!
 
-    function findCurrentWeather(latlong) {
-      $http.get('/weatherInfo/' + latlong).then((response) => {
+     vm.findCurrentWeather = findCurrentWeather();
+
+    function findCurrentWeather() {
+      $http.get('/weatherInfo/' + vm.latlong).then((response) => {
           showCurrentWeather(response);
           getPastWeekWeather();
         })
@@ -140,18 +158,22 @@
     }
 
     function showCurrentWeather(currentWeather) {
-      //console.log(currentWeather);
+      console.log(currentWeather, 'the location name!', geoCode);
 
       var datesAdded = currentWeather.data;
       datesAdded.tomorrowDay = moment().add(1, 'days').format('dddd');
       datesAdded.day2Day = moment().add(2, 'days').format('dddd');
+      datesAdded.location = geoCode.address;
+
+      console.log(datesAdded);
+
       vm.currentWeather = [datesAdded];
     }
 
     function getPastWeekWeather() {
       console.log('hist weather fired');
 
-      $http.get('/weatherInfo/hist/' + latlong).then((response) => {
+      $http.get('/weatherInfo/hist/' + vm.latlong ).then((response) => {
           var histWeatherData = response.data;
           var dailyHighTemps = histWeatherData[0];
           var dailyLowTemps = histWeatherData[1];

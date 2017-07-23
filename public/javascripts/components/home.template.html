@@ -11,53 +11,69 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand">SkyCast Weather</a>
-      <ul class="nav navbar-nav">
-        <li>
-          <a ng-click="$ctrl.toggleNewPost()">
-            <span class="glyphicon glyphicon-plus"> New Post</a>
-        </li>
-        <li class="navbar-form">
-          <!-- $ctrl.getLatLong(locationString) -->
-          <div ng-submit="$ctrl.getLatLong()">
-            <form class="form-inline">
-              <div class="form-inline">
-                <div class="form-group">
-                  <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control" ng-model="$ctrl.locationString">
-                  </input>
-                  
+      <div class="nav navbar-nav">
+        <!-- this is where you pulled out th working search bar! down to "li class dropdown" -->
+        <div ng-submit="$ctrl.getLatLong()">
+              <form class="form-inline">
+                <div class="form-inline">
+                  <div class="form-group dropdown">
+                    <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control dropdown-toggle" ng-model="$ctrl.locationString"aria-haspopup="true" aria-expanded="false">
+                    </input>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+
+                  </div>
+                  <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
+                  <!-- switched it to button -->
+                  <input type="submit" class="btn btn-success">Get Weather</input>
                 </div>
-                <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
-                <!-- switched it to button -->
-                <input type="submit" class="btn btn-success">Get Weather</input>
-              </div>
-            </form>
-          </div>
-        </li>
+              </form>
+            </div>
+          </li>
+
+
+        <div class='col-lg-3'>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>Sort by {{ view.currentSort }}</span> <span class="caret"></span></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button"><button type="button" class="btn btn-info">Toggle Users</button> </a>
           <!-- double check is dropdown menu a bootstrap thing? -->
           <ul class="dropdown-menu">
             <div ng-repeat="user in $ctrl.users">
-              <li><a ng-click="$ctrl.changeUser(user.id)" ng-model='user'> {{user.user_name}}</a></li>
+              <li class="dropdown-item"><a ng-click="$ctrl.changeUser(user.id)" ng-model='user'> {{user.user_name}}</a></li>
             </div>
           </ul>
         </li>
-      </ul>
+      </div>
+      <div class="col-lg-3">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Recent Searches
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <div ng-repeat="result in $ctrl.lastFiveSearches">
+              <li class="dropdown-item"><a ng-click="$ctrl.getLatLong(result.location)" ng-model='user'> {{result.location}}</a></li>
+            </div>
+          </ul>
+        </div>
+      </div>
+      </div>
     </div>
 
   </div>
 </nav>
 <div class="container-fluid">
-  <p ng-bind="showSearchLocation.start"></p>
-  <div>
-    <p>First name: {{locationName}}</p>
-
-  <div class="row city-name">Namespace for city{{locationName}}</div>
+  <div class="filler-height">
+  <div ng-repeat="data in $ctrl.currentWeather">
+  <div class="row city-name">{{data.location}}</div>
   </div>
+</div>
   <div class="row">
     <div class="col-lg-7 col-md-5 col-sm-12">
       <div class="row" ng-repeat="data in $ctrl.currentWeather">
-        <post data="postObj"></post>
+
+        <!-- <post data="postObj"></post> -->
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
@@ -81,6 +97,7 @@
           <div class="well currentInfo text-center">
             <div class="row">
               <h3 class="text-left day ">{{data.tomorrowDay}}</h3>
+
               <hr>
               <div class="media-body">
                 <div>
