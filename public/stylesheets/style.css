@@ -15,6 +15,35 @@ a {
 
    /*#06354d#035darkslategrayhsl(200,85,16)rgb(6,53,77)*/
 }
+#btnHeight {
+
+  margin-top: 20px;
+
+}
+/*#users{
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-top: 15px;
+}*/
+
+#recentS{
+  margin-top: 20px;
+}
+
+#titleFont {
+  font-family: 'Pacifico', cursive;
+  color: rgb(255,136,0);
+  font-size: 40px;
+  margin-top: 15px;
+}
+#navFinTune{
+  display:flex;
+  align-items: center;
+}
+
+.navHeight {
+  height: 50px;
+}
 .chanceOfRain {
   margin-bottom: -10px;
 }
@@ -22,6 +51,14 @@ a {
   height: 100px;
   width:100px;
 }
+/*
+nav {
+    display: inline-block;
+}*/
+
+/*.spacing {
+  width: 100px;
+}*/
 .dropdown-item {
   font-size: 20px;
 }

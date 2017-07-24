@@ -1,43 +1,44 @@
 <!-- Navbar! -->
 
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" id="navFinTune">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
+
       </button>
-      <a class="navbar-brand">SkyCast Weather</a>
-      <div class="nav navbar-nav">
-        <!-- this is where you pulled out th working search bar! down to "li class dropdown" -->
+      <a class="navbar-brand" id="titleFont" a href="#">SkyCast Weather</a>
+      <ul class="nav navbar-nav">
+
+        <li class="nav-item navHeight">
         <div ng-submit="$ctrl.getLatLong()">
               <form class="form-inline">
-                <div class="form-inline">
+                <!-- <div class="form-inline"> -->
                   <div class="form-group dropdown">
                     <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control dropdown-toggle" ng-model="$ctrl.locationString"aria-haspopup="true" aria-expanded="false">
                     </input>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
+                    <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                  </div> -->
+
 
                   </div>
                   <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
                   <!-- switched it to button -->
-                  <input type="submit" class="btn btn-success">Get Weather</input>
-                </div>
+                  <button id="btnHeight" type="submit" type="submit"class="btn btn-success">GET WEATHER</button>
+                  <!-- <input   class="btn btn-success"></input> -->
+                <!-- </div> -->
               </form>
             </div>
-          </li>
+        </li>
 
 
-        <div class='col-lg-3'>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" role="button"><button type="button" class="btn btn-info">Toggle Users</button> </a>
+
+        <li class="dropdown nav-item">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button"><button id="users" type="button" class="btn btn-info"> Users</button> </a>
           <!-- double check is dropdown menu a bootstrap thing? -->
           <ul class="dropdown-menu">
             <div ng-repeat="user in $ctrl.users">
@@ -45,20 +46,23 @@
             </div>
           </ul>
         </li>
-      </div>
-      <div class="col-lg-3">
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+        <li class="nav-item">
+        <!-- <div class="input-group-btn"> -->
+          <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          id="recentS">
           Recent Searches
           </button>
-          <ul class="dropdown-menu dropdown-menu-right">
-            <div ng-repeat="result in $ctrl.lastFiveSearches">
-              <li class="dropdown-item"><a ng-click="$ctrl.getLatLong(result.location)" ng-model='user'> {{result.location}}</a></li>
-            </div>
-          </ul>
-        </div>
-      </div>
-      </div>
+            <ul class="dropdown-menu ">
+              <div ng-repeat="result in $ctrl.lastFiveSearches">
+                <li class="dropdown-item"><a ng-click="$ctrl.getLatLong(result.location)" ng-model='user'> {{result.location}}</a></li>
+              </div>
+            <!-- </ul>
+        </div> -->
+        </li>
+      </ul>
+    </div>
+
     </div>
 
   </div>
@@ -66,7 +70,23 @@
 <div class="container-fluid">
   <div class="filler-height">
   <div ng-repeat="data in $ctrl.currentWeather">
-  <div class="row city-name">{{data.location}}</div>
+  <div class="row city-name col-lg-6">{{data.location}}<div>
+    <!-- <div class="text-right col-lg-6">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Recent Searches
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <div ng-repeat="result in $ctrl.lastFiveSearches">
+            <li class="dropdown-item"><a ng-click="$ctrl.getLatLong(result.location)" ng-model='user'> {{result.location}}</a></li>
+          </div>
+        </ul>
+      </div>
+      </div>
+    </ul> -->
+    </div>
+
+  </div>
   </div>
 </div>
   <div class="row">
