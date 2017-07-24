@@ -1,80 +1,111 @@
 <!-- Navbar! -->
 
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" id="navFinTune">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
+
       </button>
-      <a class="navbar-brand">SkyCast Weather</a>
+      <a class="navbar-brand" id="titleFont" a href="#">SkyCast Weather</a>
       <ul class="nav navbar-nav">
-        <li>
-          <a ng-click="$ctrl.toggleNewPost()">
-            <span class="glyphicon glyphicon-plus"> New Post</a>
+
+        <li class="nav-item navHeight">
+        <div ng-submit="$ctrl.getLatLong()">
+              <form class="form-inline">
+                <!-- <div class="form-inline"> -->
+                  <div class="form-group dropdown">
+                    <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control dropdown-toggle" ng-model="$ctrl.locationString"aria-haspopup="true" aria-expanded="false">
+                    </input>
+                    <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                  </div> -->
+
+
+                  </div>
+                  <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
+                  <!-- switched it to button -->
+                  <button id="btnHeight" type="submit" type="submit"class="btn btn-success">GET WEATHER</button>
+                  <!-- <input   class="btn btn-success"></input> -->
+                <!-- </div> -->
+              </form>
+            </div>
         </li>
-        <li class="navbar-form">
-          <!-- $ctrl.getLatLong(locationString) -->
-          <div ng-submit="$ctrl.getLatLong()">
-            <form class="form-inline">
-              <div class="form-inline">
-                <div class="form-group">
-                  <input type="text" placeholder="get weather by location" id="locationString" name="locationString" class="form-control" ng-model="$ctrl.locationString">
-                  </input>
-                </div>
-                <!-- you don't necessarily need a button, they could just hit enter like the weater channel-->
-                <!-- switched it to button -->
-                <input type="submit" class="btn btn-success">Get Weather</input>
-              </div>
-            </form>
-          </div>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>Sort by {{ view.currentSort }}</span> <span class="caret"></span></a>
+
+
+
+        <li class="dropdown nav-item">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button"><button id="users" type="button" class="btn btn-info"> Users</button> </a>
+          <!-- double check is dropdown menu a bootstrap thing? -->
           <ul class="dropdown-menu">
-            <li><a ng-click="$ctrl.orderByVal='-vote_count'">Votes</a></li>
-            <li><a ng-click="$ctrl.orderByVal='title'">Title</a></li>
-            <li><a ng-click="$ctrl.orderByVal='-created_at'">Date</a></li>
+            <div ng-repeat="user in $ctrl.users">
+              <li class="dropdown-item"><a ng-click="$ctrl.changeUser(user.id)" ng-model='user'> {{user.user_name}}</a></li>
+            </div>
           </ul>
+        </li>
+
+        <li class="nav-item">
+        <!-- <div class="input-group-btn"> -->
+          <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          id="recentS">
+          Recent Searches
+          </button>
+            <ul class="dropdown-menu ">
+              <div ng-repeat="result in $ctrl.lastFiveSearches">
+                <li class="dropdown-item"><a ng-click="$ctrl.getLatLong(result.location)" ng-model='user'> {{result.location}}</a></li>
+              </div>
+            <!-- </ul>
+        </div> -->
         </li>
       </ul>
     </div>
-    <!-- <li ng-repeat="field in $ctrl.fields"><a href="#" ng-click="setOrderVal(field)">Sort by {{ field }}</a></li> -->
+
+    </div>
+
   </div>
 </nav>
 <div class="container-fluid">
-  <div class="row city-name">Namespace for city{{locationName}}</div>
+  <div class="filler-height">
+  <div ng-repeat="data in $ctrl.currentWeather">
+  <div class="row city-name col-lg-6">{{data.location}}<div>
+    <!-- <div class="text-right col-lg-6">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Recent Searches
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <div ng-repeat="result in $ctrl.lastFiveSearches">
+            <li class="dropdown-item"><a ng-click="$ctrl.getLatLong(result.location)" ng-model='user'> {{result.location}}</a></li>
+          </div>
+        </ul>
+      </div>
+      </div>
+    </ul> -->
+    </div>
+
+  </div>
+  </div>
+</div>
   <div class="row">
     <div class="col-lg-7 col-md-5 col-sm-12">
       <div class="row" ng-repeat="data in $ctrl.currentWeather">
 
-
-        <post data="postObj"></post>
+        <!-- <post data="postObj"></post> -->
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
-              Today
+              <h3 class="text-left day">Current Weather</h3>
               <hr>
               <div class="media-body">
-                <h4 class="media-heading">
-                  Current Temperature: {{data.currentTemp}}
+                <img class="climacon" ng-src="images/{{data.currWIcon}}.png"/>
+                <h4 class="media-heading temps">
+                  {{data.currentTemp}}°
                 </h4>
-
-                <p>
-                  {{data.currWSummary}}
-
-                </p>
-                <img ng-style='{{data.currWIcon}}'/>
-
-                <div>
-                      {{data.currWIcon}}
-
-
-
-
+                <div class="biggernudge">
+                    {{data.currWSummary}}
                 </div>
               </div>
             </div>
@@ -85,23 +116,20 @@
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
-              {{data.tomorrowDay}}
+              <h3 class="text-left day ">{{data.tomorrowDay}}</h3>
+
               <hr>
               <div class="media-body">
-                <h4 class="media-heading">
-                   Daily High: {{data.tommHigh}}
-                   Daily Low: {{data.tommLow}}
-                 </h4>
-
-                <p>
-                  {{data.tommSummary}}
-                </p>
                 <div>
-                  {{data.tommIcon}}
-
-
-
-
+                  <img class="climacon" ng-src="images/{{data.tommIcon}}.png"/>
+                  <h4 class="media-heading text-left temps">
+                     <div class="lilnudge">HIGH {{data.tommHigh}}°</div>
+                     LOW {{data.tommLow}}°
+                   </h4>
+                   <p>
+                     {{data.tommSummary}}
+                   </p>
+                  <img class="chanceOfRain" src="images/raindrop.png"/>{{data.tommPrecip}} %
                 </div>
               </div>
             </div>
@@ -112,42 +140,28 @@
         <div class="col-lg-4 col-md-4">
           <div class="well currentInfo text-center">
             <div class="row">
-              <h3>{{data.day2Day}}</h3>
-              <!--  this is where you do moment plus a day -->
+              <h3 class="text-left day ">{{data.day2Day}}</h3>
               <hr>
               <div class="media-body">
-                <h4 class="media-heading">
-                    daily high temperature: {{data.day2High}}
-                    daily low temperature: {{data.day2Low}}
-                  </h4>
-
+                <img class="climacon" ng-src="images/{{data.day2Icon}}.png"/>
+                <h4 class="media-heading text-left temps">
+                    <div class="lilnudge">
+                    HIGH {{data.day2High}}°
+                    </div>
+                    LOW {{data.day2Low}}°
+                </h4>
                 <p>
                   {{data.day2Summary}}
                 </p>
-                <img class="climacon" src="images/partiallyCloudy.png"/>
-                <div class="cloudy">
-
-
-                  {{data.day2Icon}}
-
-
-
-                </div>
+                  <img class="chanceOfRain" src="images/raindrop.png"/>{{data.day2Precip}} %
               </div>
             </div>
           </div>
-
         </div>
-
-
-
       </div>
-
-
-
     </div>
-    <div class="col-lg-1"></div>
-    <div id="gmaps" class="container-fluid col-lg-3 col-md-6 col-sm-12">
+    <!-- <div class="col-lg-1"></div> -->
+    <div id="gmaps" class="container-fluid col-lg-5 col-md-6 col-sm-12">
       <div id="map"></div>
     </div>
   </div>
@@ -219,19 +233,11 @@
 
 
 <div class="row">
-  <div class="col-lg-8 col-md-5 col-sm-12 text-center">
-
-
-
-
-
-
-
-    <!-- <h1>Max/Min temps for the past week</h1> -->
-
-
-    <canvas id="myChart" width="400" height="100"></canvas>
-
+  <div class="col-lg-6 col-md-6 col-sm-12 text-center">
+    <canvas id="tempChart"  height="100"></canvas>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-12 text-center">
+    <canvas id="humidityChart"  height="100"></canvas>
   </div>
 
 </div>

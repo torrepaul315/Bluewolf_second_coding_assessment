@@ -14,13 +14,9 @@
       .state({
         name: 'home',
         url: '/',
-        component: 'startPage',
+        component: 'startPage'
       })
-      // .state({
-      //   name: 'googleMaps',
-      //   url:'/letsgetsomeweather!',
-      //   component:'googMaps'
-      // })
+
   }
 
 }());
