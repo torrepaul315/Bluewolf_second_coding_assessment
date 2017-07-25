@@ -1,68 +1,36 @@
 # Bluewolf_second_coding_assessment
 
-review data binding! get city name to show! does it need to be in an ng-repeat? is there another format?
+🎉Hello and thanks for taking the time to review my coding assessment!🎉
+
+If you are in here reviewing this code well...I hope I have the opportunity to meet you in person!
+
+This is Skycast Weather, a fullstack basic weather info application at the prototype stage.
+Technologies used in this project include- Javascript, AngularJS, Node/Express, postgreSQL, Knex, Moment.js, material design Boostrap, and ChartJS.
+
+I also us Google Maps and the Google Maps geolocation APIs to receive weather data from the DarkSky weather API.
+
+You can view the following version of this site at:
+ https://bluewolf-skycast.herokuapp.com/
+
+if you would like to run this app locally, you may already have the files open on your computer.  Alternatively, you could fork and clone this repo on GitHub( url: https://github.com/torrepaul315/Bluewolf_second_coding_assessment)
+once you have the app on your computer, run:
+'npm install'
+assuming that you have postgreSQL on your machine, your next step is to run:
+'knex migate:latest'
+followed by:
+'knex seed:run'
+this will get the database up, and your last step is to run:
+'nodemon'
+to get the app up and running on localhost:3000.
+
+Enjoy!
+
+At the end of any project, it's hard not to look back and see additional features/ways to improve this application
+1- redesign db to save lat and long of places searched.  Doing this would reduced the number of api calls out to google.
+2- Improve back end error handling.  Improve both the kinds of logs on the backend as well as at least some contingencies if one or more of the apis are down
+3- Integrate this app into Salesforce with Heroku connect so that the backend functionality can be used with a salesforce instance.
 
 
-deployed on Heroku at https://bluewolf-skycast.herokuapp.com/
-notes
-1- not happy with current date format...that said you can just extract the string....come back to polish that with moment if other pieces come together!
+Additional notes-
 
-
-
-var timeScrub =  moment.unix(currentTimeInUnix);
-
-//  brainstorm! for currentweather I want to pull out
-/* 1- current temp
-   2- weather info to show an icon of some sort
-   3- prolly connected to 2, a quick description!
-   4- also, log the day!
-    for future weather-
-    1- (projected) hi temp
-    2- weather info to show an icon of some sort
-    3- prolly connected to 2, a quick description!
-
-*/
-
-function showCurrentWeather(currentWeather, timePrep) {
-   var weatherForecast = {};
-   weatherForecast.currentTemp = currentWeather.data.currently.apparentTemperature;
-   weatherForecast.currWIcon = currentWeather.data.currently.icon;
-   weatherForecast.currWSummary = currentWeather.data.currently.summary;
-
-   var day = moment().format(timePrep);
-   console.log(day, weatherForecast);
-
-
-
-   vm.posts = [weatherForecast];
-
-
-
-}
-
-///things to think about !
-
-1- right now, I'm passing the datestamps all the way back to the front end !
-dont do that!
-as per vincent a- make the call to dark sky
-b- on the backend, pull out the data you want
-c- send the data you need to render to the front end
-
-(this will- clean up the whole unix conversion issue!
-  on the back end, you make your first call, and you only need unix info for the second call! )
-right now pre refactor, you're pulling out the timestamp on the front end, to then package and send the time stamp back... not necessary!
-you will need a second route that loops, but handle the time stamp and time stamp adjustments within that route itself
-
-then, again, just pass back the info that you want render for historical data on the front
-
-
-right now you're sending the whole dam response... then parsing that on the from
-
-then, use the res .finished stuff that vincent sent over
-
-!!!!!!!!!!!!!!think about this!
-Escaping characters
-
-To escape characters in format strings, you can wrap the characters in square brackets.
-
-moment().format('[today] dddd'); // 'today Sunday'
+Based on what I have built thus far, I believe I should have the basic requirements met for this project.  As far as the bonus criteria are concerned, I have only been able to fully complete one of the three bonus criteria.  Outside of taking this project beyond a basic prototype stage, I will continue to work on building out well designed tests and work on successfully integrating a resource pre-compiler.  As I continue to refactor, I will look at breaking out the Angular component into possibly multiple compontents as a best practice.  That said, given that all of the requirements could be met on a single page of a "single page app", that did not seem essential for this prototype.

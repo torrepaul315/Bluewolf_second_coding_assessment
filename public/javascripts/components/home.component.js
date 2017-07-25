@@ -6,66 +6,42 @@
       controller: controller,
       templateUrl: '/javascripts/components/home.template.html'
     })
-  controller.$inject = ['$http']
+  controller.$inject = ['$http'];
 
   function controller($http, $scope) {
-    console.log('something!')
-
+    console.log('something!');
+    //time to declare some variables!
 
     const vm = this;
-    let geocoder
-    let map
-    let latitude
-    let longitude
-    //instead of reg lat long, convert to vm.latlong?
-    let latlong
-
-    let geoCode
-
     vm.userName = 3;
     vm.lastFiveSearches;
+    vm.latlong;
 
-    vm.latlong
-  //do I even need to declare these? hmm
-    //vm.newSearch
-    vm.changeUser = function(id){
-      console.log('wired up!',id,'username',vm.userName )
+    let geocoder;
+    let map;
+    let latitude;
+    let longitude;
+    let latlong;
+    let geoCode;
+
+
+    vm.changeUser = function(id) {
+      console.log('wired up!', id, 'username', vm.userName);
       vm.userName = id;
-      console.log(vm.userName)
+      console.log(vm.userName);
       getSearchHistoryByUser(vm.userName);
     }
-    //getSearchHistoryByUser()
-    //  $scope.showSearchLocation = $scope.showSearchLocation || {};
-    //  $scope.showSearchLocation.start = "Denver";
-    vm.locationName = "londres";
-    //do I need this?   var haveHistData = false;
-   
-
-    //
-    // do I need this either? vm.locationName = "Denver"
-
-
-    //!!!!! handle condition if person does not share location!...
-
-    //!!! have map marker default to bluewolf hq!
+    //hmm. have map center on bluewolf hq?
     vm.$onInit = function() {
       console.log("doing something!");
-      //    initMap(){
       let pos
       var infoWindow
-      geocoder = new google.maps.Geocoder();
 
+      geocoder = new google.maps.Geocoder();
       map = new google.maps.Map(document.getElementById('map'), {
         zoom: 11
-        //  center: uluru
       });
-      // var marker = new google.maps.Marker({
-      //   position: uluru,
-      //   map: map
-      // });
       infoWindow = new google.maps.InfoWindow;
-
-      // Try HTML5 geolocation.
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           pos = {
@@ -77,15 +53,12 @@
           infoWindow.setContent('Get Weather for your current location');
           infoWindow.open(map);
           map.setCenter(pos);
-          //  callToApi(pos)
         }, function() {
           handleLocationError(true, infoWindow, map.getCenter());
         });
       } else {
-        // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
       };
-      //trying it out down here
       getUsers()
       getSearchHistoryByUser(vm.userName)
     }
@@ -94,14 +67,11 @@
       console.log(vm.newLocation)
     }
 
-
-    // vm.getLatLong = function(locationString)
     vm.getLatLong = function(location) {
-    //I've purposely altered this away from using "vm.locationString...the search is wired up differently! "
-      console.log('hooked up!',location, vm.locationString);
-      if (location){
-      geoCode = {
-        address: location
+      console.log('hooked up!', location, vm.locationString);
+      if (location) {
+        geoCode = {
+          address: location
         }
       } else {
         geoCode = {
@@ -112,7 +82,7 @@
 
       console.log(vm.posts);
       console.log("local array", vm.posts);
-      //google.maps.Geocoder.geocode(GeocoderRequest);
+
       codeAddress(geoCode);
     }
 
@@ -129,7 +99,6 @@
           latitude = results[0].geometry.viewport.f.b;
           longitude = results[0].geometry.viewport.b.b;
           vm.latlong = latitude.toPrecision(8) + ',' + longitude.toPrecision(8);
-
           findCurrentWeather(vm.latlong);
           map.setCenter(results[0].geometry.location);
           var marker = new google.maps.Marker({
@@ -137,15 +106,13 @@
             position: results[0].geometry.location
           });
           addToUserSearchHistory(vm.userName, geoCode);
-
         } else {
           alert('Geocode was not successful for the following reason: ' + status);
         }
       });
     }
-//funct had latlong in it!
 
-     vm.findCurrentWeather = findCurrentWeather();
+    vm.findCurrentWeather = findCurrentWeather();
 
     function findCurrentWeather() {
       $http.get('/weatherInfo/' + vm.latlong).then((response) => {
@@ -173,21 +140,15 @@
     function getPastWeekWeather() {
       console.log('hist weather fired');
 
-      $http.get('/weatherInfo/hist/' + vm.latlong ).then((response) => {
+      $http.get('/weatherInfo/hist/' + vm.latlong).then((response) => {
           var histWeatherData = response.data;
           var dailyHighTemps = histWeatherData[0];
           var dailyLowTemps = histWeatherData[1];
           var dailyHumidity = histWeatherData[2];
-//hmm, just refactor this bad boy- to a for loop, but ideally a H.O.F!
-          var dayLabels = [
-            moment().subtract(7, 'days').format('LL'),
-            moment().subtract(6, 'days').format('LL'),
-            moment().subtract(5, 'days').format('LL'),
-            moment().subtract(4, 'days').format('LL'),
-            moment().subtract(3, 'days').format('LL'),
-            moment().subtract(2, 'days').format('LL'),
-            moment().subtract(1, 'days').format('LL')
-          ]
+          var dayLabels = [];
+          for (var date = 7; date >= 1; date--) {
+            dayLabels.push(moment().subtract(date, 'days').format('LL'))
+          }
           buildTempChart(dayLabels, dailyHighTemps, dailyLowTemps);
           buildHumidityChart(dayLabels, dailyHumidity);
         })
@@ -208,10 +169,10 @@
     };
 
     function buildTempChart(dayLabels, dailyHighTemps, dailyLowTemps) {
-      var ctx = document.getElementById("tempChart");
+      var ctx = document.getElementById('tempChart');
       var tempChart = new Chart(ctx, {
         type: 'bar',
-        title: "Daily High temperature from the last week",
+        title: 'Daily High temperature from the last week',
         data: {
           labels: dayLabels,
           datasets: [{
@@ -222,14 +183,10 @@
               borderWidth: 2
             },
             {
-              label: "Daily Low Temp",
-
+              label: 'Daily Low Temp',
               data: dailyLowTemps,
-
               backgroundColor: 'rgba(54, 162, 235, 0.2)',
-
               borderColor: 'rgba(54, 162, 235, 1)',
-
               borderWidth: 2
             }
           ]
@@ -255,11 +212,10 @@
     }
 
     function buildHumidityChart(dayLabels, dailyHumidity) {
-      var ctx = document.getElementById("humidityChart");
-
+      var ctx = document.getElementById('humidityChart');
       var tempChart = new Chart(ctx, {
         type: 'line',
-        title: "Daily High temperature from the last week",
+        title: 'Daily High temperature from the last week',
         data: {
           labels: dayLabels,
           datasets: [{
@@ -294,7 +250,7 @@
     function getUsers() {
       $http.get('/database/users').then((listOfUsers) => {
           console.log(listOfUsers.data);
-          vm.users= listOfUsers.data;
+          vm.users = listOfUsers.data;
         })
         .catch((err) => {
           console.log(err);
@@ -303,13 +259,12 @@
 
     function getSearchHistoryByUser(user_id) {
       $http.get('/database/search_history/' + user_id).then((response) => {
-          vm.lastFiveSearches = response.data.slice(0,5);
+          vm.lastFiveSearches = response.data.slice(0, 5);
           console.log(vm.lastFiveSearches);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-
   }
 }());

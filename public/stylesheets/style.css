@@ -44,9 +44,7 @@ a {
 .navHeight {
   height: 50px;
 }
-.chanceOfRain {
-  margin-bottom: -10px;
-}
+
 .climacon {
   height: 100px;
   width:100px;
@@ -85,7 +83,8 @@ nav {
   margin-top: -15px;
 }
 .chanceOfRain {
-  height:20px;
+  border-top:10px;
+  height:30px;
   width:auto;
 }
 
