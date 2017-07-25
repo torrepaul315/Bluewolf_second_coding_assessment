@@ -17,11 +17,9 @@ const DARK_SKY_ENDPOINT = `${process.env.DARK_SKY_ENDPOINT}/${process.env.DARK_S
 //router.get("darksky") with variabl
 router.get(`/:latlong`, (req, res, next) => {
   var lat = req.params.latlong;
-  ///! this is an example of switching to a console.log the line below!
-  //  console.log('something happened!',lat);
+
   https.get(DARK_SKY_ENDPOINT + lat, function(response) {
-    //  console.log('statusCode:', res.statusCode);
-    //console.log('headers:', res.headers);
+
     var info = "";
     response.on('data', function(chunk) {
       //     console.log('response data', typeof d);
@@ -96,13 +94,7 @@ router.get(`/:latlong`, (req, res, next) => {
       }
     });
   })
-  //   .end(weatherInfo => {
-  //     console.log('got hurr!');
-  //   res.json(weatherInfo);
-  // }).catch(err => {
-  //   console.log("got hurr to errorland!");
-  //   next(err)
-  // })
+
 });
 
 //route to get historical data
@@ -115,7 +107,6 @@ router.get(`/hist/:latlong`, (req, res, next) => {
   var daysInWeek = 7;
   var weekInSecs = dayInSecs * daysInWeek;
   var weekAgoInUnix = moment().format('X') - weekInSecs;
-  //console.log(weekAgoInUnix);
   var histWeatherDataArray = [];
   var highTempArray = [];
   var lowTempArray = [];
@@ -142,7 +133,6 @@ router.get(`/hist/:latlong`, (req, res, next) => {
                 return;
               }
 
-// what is thing???
               var thing = histWbyDay.daily.data[0];
               var dailyHigh = Math.round(thing.apparentTemperatureMax);
               var dailyLow = Math.round(thing.apparentTemperatureMin);
@@ -184,18 +174,6 @@ router.get(`/hist/:latlong`, (req, res, next) => {
 
   });
 
-/* notes from vincent ie chart issue
-1- if you are going to do a loop to get the data(you have to make 7 calls one way or the other!) do that loop from the server side, NOT started by the front end controller
-2- it's probably the async function that is causing the graph not to render properly, at least initially
 
-3- do the calls from the back end in a new route, and then have a wait, or "is complete ", then send a response to the front end to render the data points
-
-
-4- poor man's solution....have a while loop etc- don't return a response until a particular condition is met
-
-BETTER solution- use features of a router library (it might already be in http, https!) check out https://github.com/luciotato/waitfor !!!!!
-//
-
-*/
 
 module.exports = router;
