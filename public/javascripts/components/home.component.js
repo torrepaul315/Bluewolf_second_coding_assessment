@@ -169,6 +169,7 @@
     };
 
     function buildTempChart(dayLabels, dailyHighTemps, dailyLowTemps) {
+      console.log(dailyHighTemps, dailyLowTemps);
       var ctx = document.getElementById('tempChart');
       var tempChart = new Chart(ctx, {
         type: 'bar',
@@ -205,10 +206,11 @@
                 max: 130,
                 beginAtZero: true
               }
-            }]
+            }]  
           }
         }
       });
+      console.log(data.datasets[0].data, data.datasets[1].data);
     }
 
     function buildHumidityChart(dayLabels, dailyHumidity) {
